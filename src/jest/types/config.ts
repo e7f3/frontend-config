@@ -1,43 +1,25 @@
-"use strict";
+import type { Config } from '@jest/types'
 
-import type { Config } from "jest";
+/**
+ * Jest preset types
+ */
+export type JestPreset = 'base' | 'react' | 'typescript'
 
-export interface JestOptions {
-  /**
-   * Common configuration options for Jest
-   * Extendable by presets
-   */
-  preset?: string;
-  setupFiles?: string[];
-  testMatch?: string[];
-  moduleFileExtensions?: string[];
-  transform?: Record<string, string>;
-  globals?: Record<string, unknown>;
-  setupFilesAfterEnv?: string[];
-  testEnvironment?: string;
-  
-  // Additional Jest configuration options
-  collectCoverage?: boolean;
-  coverageDirectory?: string;
-  coverageReporters?: string[] | Config["coverageReporters"];
-  coverageThreshold?: Record<string, number> | Config["coverageThreshold"];
-  testTimeout?: number;
-  verbose?: boolean;
-  bail?: boolean;
-  notify?: boolean;
-  notifyMode?: string;
-  maxWorkers?: string | number;
-  rootDir?: string;
-  testPathIgnorePatterns?: string[];
-  
-  // React-specific options
-  moduleNameMapper?: Record<string, string>;
-}
+/**
+ * Jest configuration type (re-export from @jest/types)
+ */
+export type JestConfig = Config.InitialOptions
 
-export interface JestConfig extends Config {
-  /**
-   * Project-specific Jest configuration
-   * Built from JestOptions
-   */
-  jestOptions: JestOptions;
+/**
+ * Jest configuration builder options
+ */
+export interface JestOptions extends Partial<JestConfig> {
+    /**
+     * Configuration preset to use
+     * - 'base': Minimal Jest configuration
+     * - 'react': React + Testing Library setup
+     * - 'typescript': TypeScript-optimized setup
+     * @default 'base'
+     */
+    preset?: JestPreset
 }

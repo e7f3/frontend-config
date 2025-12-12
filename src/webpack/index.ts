@@ -1,8 +1,8 @@
-"use strict";
+'use strict'
 
-import { reactPreset } from "./presets/reactPreset";
-import { vanillaPreset } from "./presets/vanillaPreset";
-import { typescriptPreset } from "./presets/typescriptPreset";
-import { buildWebpackConfig } from "./builders/buildWebpackConfig";
+import { buildWebpackConfig } from './builders/buildWebpackConfig'
+import { reactPreset } from './presets/reactPreset'
+import { typescriptPreset } from './presets/typescriptPreset'
+import { vanillaPreset } from './presets/vanillaPreset'
 
-export { reactPreset, vanillaPreset, typescriptPreset, buildWebpackConfig };
+export { reactPreset, vanillaPreset, typescriptPreset, buildWebpackConfig }

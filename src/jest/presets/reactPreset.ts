@@ -1,25 +1,24 @@
-"use strict";
+import type { JestConfig } from '../types/config'
 
-import type { JestOptions } from "../types/config";
-import { basePreset } from "./basePreset";
-
-export function reactPreset(options: JestOptions = {}): JestOptions {
-  return {
-    ...basePreset(options),
-    preset: options.preset || "react-testing-library",
-    setupFilesAfterEnv: [
-      ...(options.setupFilesAfterEnv || []),
-      "<rootDir>/src/setupTests.ts"
-    ],
-    testEnvironment: "jsdom",
-    // React-specific configuration
-    moduleNameMapper: {
-      "\\.\\.(css|less|scss|sass|styl)$": "identity-obj-proxy",
-      ...options.moduleNameMapper
-    },
-    transform: {
-      "\\.\\.(js|jsx|ts|tsx)$": "babel-jest",
-      ...options.transform
+/**
+ * React Jest preset configuration
+ * Includes Testing Library and JSDOM environment
+ */
+export function reactPreset(): JestConfig {
+    return {
+        testEnvironment: 'jsdom',
+        roots: ['<rootDir>/src'],
+        testMatch: ['**/__tests__/**/*.{js,jsx,ts,tsx}', '**/*.{spec,test}.{js,jsx,ts,tsx}'],
+        setupFilesAfterEnv: ['<rootDir>/node_modules/@testing-library/jest-dom'],
+        moduleFileExtensions: ['js', 'jsx', 'ts', 'tsx', 'json', 'node'],
+        transform: {
+            '^.+\\.(ts|tsx)$': 'ts-jest',
+            '^.+\\.(js|jsx)$': 'babel-jest',
+        },
+        moduleNameMapper: {
+            '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
+            '\\.(jpg|jpeg|png|gif|svg)$': '<rootDir>/__mocks__/fileMock.js',
+        },
+        collectCoverageFrom: ['src/**/*.{js,jsx,ts,tsx}', '!src/**/*.d.ts', '!src/**/*.stories.{js,jsx,ts,tsx}', '!src/**/__tests__/**'],
     }
-  };
 }

@@ -1,3 +1,3 @@
-"use strict";
+'use strict'
 
-export { buildStylelintConfig } from "./buildStylelintConfig";
+export { buildStylelintConfig } from './buildStylelintConfig'
