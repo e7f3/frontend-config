@@ -1,67 +1,58 @@
-import type { Configuration as WebpackConfiguration } from 'webpack';
-import type { Configuration as DevServerConfiguration } from 'webpack-dev-server';
-import type { BuildMode, BuildPaths, BuildPlatform } from '../../shared/types';
+import type { Configuration } from 'webpack'
+import type { Configuration as DevServerConfiguration } from 'webpack-dev-server'
 
 /**
- * Environment variables passed to webpack config builder
+ * Webpack build paths configuration
  */
-export interface BuildEnv {
-  mode?: BuildMode;
-  port?: number;
-  analyzer?: boolean;
-  platform?: BuildPlatform;
-  apiUrl?: string;
+export interface BuildPaths {
+    /** Entry point file path (e.g., './src/index.tsx') */
+    entry: string
+    /** Output directory path (e.g., './dist') */
+    output: string
+    /** HTML template file path (e.g., './public/index.html') */
+    html: string
+    /** Source directory path (e.g., './src') */
+    src: string
+    /** Public assets directory path (optional) */
+    public?: string
 }
 
 /**
- * Complete options object for webpack config builders
+ * Webpack build configuration options
  */
 export interface BuildOptions {
-  /** Build mode - development or production */
-  mode: BuildMode;
-  /** Path configuration */
-  paths: BuildPaths;
-  /** Convenience flag - true when mode is 'development' */
-  isDev: boolean;
-  /** Convenience flag - true when mode is 'production' */
-  isProd: boolean;
-  /** Dev server port (optional) */
-  port?: number;
-  /** Target platform (optional) */
-  platform?: BuildPlatform;
-  /** Enable webpack bundle analyzer (optional) */
-  analyzer?: boolean;
-  /** Enable source maps (optional, defaults based on mode) */
-  sourceMaps?: boolean;
-  /** API URL for DefinePlugin (optional) */
-  apiUrl?: string;
-  /** Project root path (optional, defaults to process.cwd()) */
-  rootPath?: string;
+    /** Build mode - 'development' or 'production' */
+    mode: 'development' | 'production'
+    /** Path configuration for build */
+    paths: BuildPaths
+    /** Whether this is a development build (enables dev server, etc.) */
+    isDev?: boolean
+    /** Development server port number (default: 3000) */
+    port?: number
+    /** Enable webpack bundle analyzer (default: false) */
+    analyzer?: boolean
+    /** Public path for assets (default: '/') */
+    publicPath?: string
+    /** Target platform for build optimization */
+    platform?: NodeJS.Platform
+    /** Env variables */
+    env?: EnvVariables
 }
 
 /**
- * Options for CSS loader builder
+ * Environment variables for webpack configuration
  */
-export interface CssLoaderOptions {
-  /** Enable CSS modules */
-  modules?: boolean;
-  /** Development mode flag */
-  isDev: boolean;
+export interface EnvVariables {
+    /** Build mode */
+    mode: 'development' | 'production'
+    /** Development server port */
+    port?: number
+    /** Enable bundle analyzer */
+    analyzer?: boolean
+    /** API URL for environment configuration */
+    apiUrl?: string
 }
 
-/**
- * Options for TypeScript loader builder
- */
-export interface TsLoaderOptions {
-  /** Use esbuild-loader for faster compilation in dev */
-  useEsbuild?: boolean;
-  /** Development mode flag */
-  isDev: boolean;
-}
-
-/**
- * Complete webpack configuration with dev server
- */
-export interface WebpackConfigWithDevServer extends WebpackConfiguration {
-  devServer?: DevServerConfiguration;
+export interface WebpackConfiguration extends Configuration {
+    devServer?: DevServerConfiguration
 }

@@ -1,59 +1,84 @@
-"use strict";
+import { basePreset } from './presets/basePreset'
+import { reactPreset } from './presets/reactPreset'
+import { typescriptPreset } from './presets/typescriptPreset'
+import type { JestConfig, JestOptions } from './types/config'
 
-import type { JestOptions, JestConfig } from "./types/config";
-import { basePreset } from "./presets/basePreset";
-import { reactPreset } from "./presets/reactPreset";
-import { typescriptPreset } from "./presets/typescriptPreset";
+/**
+ * Build Jest configuration with preset support
+ *
+ * Applies preset defaults first, then user options override them.
+ * Only sets fallback values for options not provided by preset or user.
+ *
+ * @param options - Jest configuration options
+ * @returns Complete Jest configuration object
+ *
+ * @example
+ * ```
+ * import { buildJestConfig } from '@e7f3/frontend-config/jest'
+ *
+ * export default buildJestConfig({
+ *   preset: 'react',
+ *   collectCoverage: true,
+ *   coverageThreshold: {
+ *     global: {
+ *       branches: 80,
+ *       functions: 80,
+ *       lines: 80,
+ *       statements: 80,
+ *     },
+ *   },
+ * })
+ * ```
+ */
+export function buildJestConfig(options: JestOptions = {}): JestConfig {
+    // Step 1: Get preset configuration
+    let presetConfig: Partial<JestConfig> = {}
 
-export function buildJestConfig(options: JestOptions): JestConfig {
-  // Apply preset if specified
-  let presetOptions: JestOptions = { ...options };
-
-  if (options.preset) {
     switch (options.preset) {
-      case "react":
-        presetOptions = reactPreset(options);
-        break;
-      case "typescript":
-        presetOptions = typescriptPreset(options);
-        break;
-      case "base":
-      default:
-        presetOptions = basePreset(options);
-        break;
+        case 'react':
+            presetConfig = reactPreset()
+            break
+        case 'typescript':
+            presetConfig = typescriptPreset()
+            break
+        case 'base':
+        default:
+            presetConfig = basePreset()
+            break
     }
-  } else {
-    // Default to base preset if no preset specified
-    presetOptions = basePreset(options);
-  }
 
-  // Build the final Jest configuration
-  const config: JestConfig = {
-    ...presetOptions,
-    jestOptions: presetOptions,
-    preset: presetOptions.preset,
-    setupFiles: presetOptions.setupFiles,
-    testMatch: presetOptions.testMatch,
-    moduleFileExtensions: presetOptions.moduleFileExtensions,
-    transform: presetOptions.transform,
-    globals: presetOptions.globals,
-    setupFilesAfterEnv: presetOptions.setupFilesAfterEnv,
-    testEnvironment: presetOptions.testEnvironment,
-    
-    // Additional Jest configuration options
-    collectCoverage: options.collectCoverage || false,
-    coverageDirectory: options.coverageDirectory || "coverage",
-    coverageReporters: options.coverageReporters || ["json", "lcov", "text", "clover"] as any,
-    coverageThreshold: options.coverageThreshold as any,
-    testTimeout: options.testTimeout || 5000,
-    verbose: options.verbose || false,
-    bail: options.bail || false,
-    notify: options.notify || false,
-    notifyMode: options.notifyMode || "always",
-    maxWorkers: options.maxWorkers || "50%",
-    rootDir: options.rootDir || process.cwd(),
-    testPathIgnorePatterns: options.testPathIgnorePatterns || ["/node_modules/", "/dist/", "/build/"]
-  };
+    // Step 2: Build final config with proper precedence:
+    // User options > Preset defaults > Global defaults
+    const config: JestConfig = {
+        // Start with preset config
+        ...presetConfig,
 
-  return config;
+        // Override with all user-provided options
+        ...options,
+
+        // Special handling for arrays - merge instead of replace
+        testPathIgnorePatterns: options.testPathIgnorePatterns ??
+            presetConfig.testPathIgnorePatterns ?? ['/node_modules/', '/dist/', '/build/'],
+
+        coverageReporters: options.coverageReporters ?? presetConfig.coverageReporters ?? ['json', 'lcov', 'text', 'clover'],
+
+        // Set global defaults only if not in preset or user options
+        rootDir: options.rootDir ?? presetConfig.rootDir ?? process.cwd(),
+        collectCoverage: options.collectCoverage ?? presetConfig.collectCoverage ?? false,
+        coverageDirectory: options.coverageDirectory ?? presetConfig.coverageDirectory ?? 'coverage',
+        testTimeout: options.testTimeout ?? presetConfig.testTimeout ?? 5000,
+        verbose: options.verbose ?? presetConfig.verbose ?? false,
+        bail: options.bail ?? presetConfig.bail ?? false,
+        notify: options.notify ?? presetConfig.notify ?? false,
+        notifyMode: options.notifyMode ?? presetConfig.notifyMode ?? 'always',
+        maxWorkers: options.maxWorkers ?? presetConfig.maxWorkers ?? '50%',
+
+        // Coverage threshold - user option takes full precedence
+        coverageThreshold: options.coverageThreshold ?? presetConfig.coverageThreshold,
+    }
+
+    // Remove the 'preset' key from final config (it's not a valid Jest option)
+    const { preset, ...finalConfig } = config
+
+    return finalConfig as JestConfig
 }

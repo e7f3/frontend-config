@@ -1,3 +1,3 @@
-"use strict";
+'use strict'
 
-export { buildEslintConfig } from "./buildEslintConfig";
+export { buildEslintConfig } from './buildEslintConfig'

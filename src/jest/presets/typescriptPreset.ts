@@ -1,35 +1,25 @@
-"use strict";
+import type { JestConfig } from '../types/config'
 
-import type { JestOptions } from "../types/config";
-import { basePreset } from "./basePreset";
-
-export function typescriptPreset(options: JestOptions = {}): JestOptions {
-  return {
-    ...basePreset(options),
-    preset: options.preset || "ts-jest",
-    globals: {
-      ...options.globals,
-      "ts-jest": {
-        diagnostics: {
-          ignorePatterns: ["/node_modules/"]
+/**
+ * TypeScript Jest preset configuration
+ * Optimized for TypeScript projects with ts-jest
+ */
+export function typescriptPreset(): JestConfig {
+    return {
+        testEnvironment: 'node',
+        roots: ['<rootDir>/src'],
+        testMatch: ['**/__tests__/**/*.{ts,tsx}', '**/*.{spec,test}.{ts,tsx}'],
+        moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
+        transform: {
+            '^.+\\.(ts|tsx)$': [
+                'ts-jest',
+                {
+                    tsconfig: {
+                        esModuleInterop: true,
+                    },
+                },
+            ],
         },
-        tsconfig: "tsconfig.json"
-      }
-    },
-    // TypeScript-specific configuration
-    moduleFileExtensions: [
-      ...(options.moduleFileExtensions || []),
-      "ts",
-      "tsx"
-    ],
-    transform: {
-      "\\.\\.(ts|tsx)$": "ts-jest",
-      ...options.transform
-    },
-    testMatch: [
-      ...(options.testMatch || []),
-      "**/__tests__/**/*.+(ts|tsx)",
-      "**/?(*.)+(spec|test).+(ts|tsx)"
-    ]
-  };
+        collectCoverageFrom: ['src/**/*.{ts,tsx}', '!src/**/*.d.ts', '!src/**/__tests__/**'],
+    }
 }
