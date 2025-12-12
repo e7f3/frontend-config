@@ -75,7 +75,8 @@
         "npm": ">=9.0.0"
     },
     "publishConfig": {
-        "access": "public"
+        "access": "public",
+        "registry": "https://registry.npmjs.org/"
     },
     "peerDependencies": {
         "@typescript-eslint/eslint-plugin": "^8.0.0",
