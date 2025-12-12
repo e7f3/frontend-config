@@ -1,0 +1,17 @@
+# Dependencies
+node_modules
+
+# Build output
+dist
+build
+coverage
+
+# Misc
+*.min.js
+*.min.css
+.fttemplates
+storybook-static
+
+# Markdown files
+*.md
+**/*.md
