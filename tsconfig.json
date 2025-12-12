@@ -32,7 +32,17 @@
         "types": ["node"]
     },
     "include": ["src/**/*"],
-    "exclude": ["node_modules", "dist", "examples", "**/*.test.ts", "**/*.spec.ts", "coverage", "build", "eslint.config.ts", "stylelint.config.ts"],
+    "exclude": [
+        "node_modules",
+        "dist",
+        "examples",
+        "**/*.test.ts",
+        "**/*.spec.ts",
+        "coverage",
+        "build",
+        "eslint.config.ts",
+        "stylelint.config.ts"
+    ],
     "ts-node": {
         "compilerOptions": {
             "module": "commonjs",
