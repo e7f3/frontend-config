@@ -41,7 +41,7 @@
         "build": "tsc",
         "build:watch": "tsc --watch",
         "clean": "rm -rf dist",
-        "prepublishOnly": "npm run clean && npm run build && npm run test",
+        "prepublishOnly": "npm run format && npm run clean && npm run build && npm run lint",
         "test": "vitest run",
         "test:watch": "vitest",
         "test:coverage": "vitest run --coverage",
