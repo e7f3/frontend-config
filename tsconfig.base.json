@@ -6,8 +6,6 @@
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
-    "outDir": "./dist",
-    "rootDir": "./src",
     "removeComments": true,
     "strict": true,
     "noUnusedLocals": true,
@@ -33,23 +31,5 @@
     "incremental": true,
     "composite": true,
     "tsBuildInfoFile": "./node_modules/.tmp/tsbuildinfo"
-  },
-  "include": ["src/**/*"],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "examples",
-    "**/*.test.ts",
-    "**/*.spec.ts",
-    "coverage",
-    "build",
-    "eslint.config.ts",
-    "stylelint.config.ts"
-  ],
-  "ts-node": {
-    "compilerOptions": {
-      "module": "commonjs",
-      "moduleResolution": "node"
-    }
   }
 }
