@@ -1,183 +1,263 @@
 {
-    "name": "@e7f3/frontend-config",
-    "version": "1.0.0",
-    "description": "Shared frontend configuration presets and builders for Webpack, Jest, ESLint, and Stylelint",
-    "main": "./dist/index.js",
-    "types": "./dist/index.d.ts",
-    "exports": {
-        ".": {
-            "types": "./dist/index.d.ts",
-            "require": "./dist/index.js",
-            "import": "./dist/index.js"
-        },
-        "./webpack": {
-            "types": "./dist/webpack/index.d.ts",
-            "require": "./dist/webpack/index.js",
-            "import": "./dist/webpack/index.js"
-        },
-        "./jest": {
-            "types": "./dist/jest/index.d.ts",
-            "require": "./dist/jest/index.js",
-            "import": "./dist/jest/index.js"
-        },
-        "./eslint": {
-            "types": "./dist/eslint/index.d.ts",
-            "require": "./dist/eslint/index.js",
-            "import": "./dist/eslint/index.js"
-        },
-        "./stylelint": {
-            "types": "./dist/stylelint/index.d.ts",
-            "require": "./dist/stylelint/index.js",
-            "import": "./dist/stylelint/index.js"
-        }
+  "name": "@e7f3/frontend-config",
+  "version": "2.0.0",
+  "description": "Shared frontend configuration presets and builders for Webpack, Vite, Jest, ESLint, and Stylelint",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.js",
+      "import": "./dist/index.js"
     },
-    "files": [
-        "dist",
-        "README.md",
-        "CHANGELOG.md",
-        "LICENSE"
-    ],
-    "scripts": {
-        "build": "tsc",
-        "build:watch": "tsc --watch",
-        "clean": "rm -rf dist",
-        "prepublishOnly": "npm run format && npm run clean && npm run build && npm run lint",
-        "test": "vitest run",
-        "test:watch": "vitest",
-        "test:coverage": "vitest run --coverage",
-        "lint": "NODE_OPTIONS='--import tsx' eslint .",
-        "lint:fix": "NODE_OPTIONS='--import tsx' eslint . --fix",
-        "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,css,scss,md,yml,yaml}\"",
-        "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,css,scss,md,yml,yaml}\""
+    "./webpack": {
+      "types": "./dist/webpack/index.d.ts",
+      "require": "./dist/webpack/index.js",
+      "import": "./dist/webpack/index.js"
     },
-    "keywords": [
-        "webpack",
-        "webpack-config",
-        "eslint",
-        "eslint-config",
-        "jest",
-        "jest-preset",
-        "stylelint",
-        "stylelint-config",
-        "typescript",
-        "react",
-        "frontend",
-        "build-tools",
-        "config-preset"
-    ],
-    "author": {
-        "name": "e7f3",
-        "url": "https://github.com/e7f3"
+    "./jest": {
+      "types": "./dist/jest/index.d.ts",
+      "require": "./dist/jest/index.js",
+      "import": "./dist/jest/index.js"
     },
-    "license": "MIT",
-    "engines": {
-        "node": ">=18.0.0",
-        "npm": ">=9.0.0"
+    "./eslint": {
+      "types": "./dist/eslint/index.d.ts",
+      "require": "./dist/eslint/index.js",
+      "import": "./dist/eslint/index.js"
     },
-    "publishConfig": {
-        "access": "public",
-        "registry": "https://registry.npmjs.org/"
+    "./stylelint": {
+      "types": "./dist/stylelint/index.d.ts",
+      "require": "./dist/stylelint/index.js",
+      "import": "./dist/stylelint/index.js"
     },
-    "peerDependencies": {
-        "@typescript-eslint/eslint-plugin": "^8.0.0",
-        "@typescript-eslint/parser": "^8.0.0",
-        "eslint": "^8.0.0 || ^9.0.0",
-        "eslint-plugin-import": "^2.29.0",
-        "eslint-plugin-jsx-a11y": "^6.8.0",
-        "eslint-plugin-react": "^7.33.0",
-        "eslint-plugin-react-hooks": "^4.6.0 || ^5.0.0",
-        "jest": "^29.0.0",
-        "stylelint": "^15.0.0 || ^16.0.0",
-        "typescript": "^5.0.0",
-        "webpack": "^5.0.0"
+    "./vite": {
+      "types": "./dist/vite/index.d.ts",
+      "require": "./dist/vite/index.js",
+      "import": "./dist/vite/index.js"
     },
-    "peerDependenciesMeta": {
-        "webpack": {
-            "optional": true
-        },
-        "eslint": {
-            "optional": true
-        },
-        "stylelint": {
-            "optional": true
-        },
-        "jest": {
-            "optional": true
-        },
-        "@typescript-eslint/parser": {
-            "optional": true
-        },
-        "@typescript-eslint/eslint-plugin": {
-            "optional": true
-        },
-        "eslint-plugin-import": {
-            "optional": true
-        },
-        "eslint-plugin-jsx-a11y": {
-            "optional": true
-        },
-        "eslint-plugin-react": {
-            "optional": true
-        },
-        "eslint-plugin-react-hooks": {
-            "optional": true
-        }
+    "./vitest": {
+      "types": "./dist/vitest/index.d.ts",
+      "require": "./dist/vitest/index.js",
+      "import": "./dist/vitest/index.js"
     },
-    "dependencies": {
-        "@eslint/eslintrc": "^3.2.0",
-        "@eslint/js": "^9.17.0",
-        "@pmmmwh/react-refresh-webpack-plugin": "^0.5.11",
-        "@testing-library/jest-dom": "^6.1.0",
-        "@testing-library/react": "^14.1.0",
-        "babel-jest": "^29.7.0",
-        "compression-webpack-plugin": "^11.0.0",
-        "dotenv-webpack": "^8.0.1",
-        "jest-environment-jsdom": "^29.7.0",
-        "postcss": "^8.4.32",
-        "react-refresh": "^0.14.0",
-        "sass": "^1.69.5",
-        "stylelint-order": "^6.0.4",
-        "stylelint-semantic-groups": "^1.2.0",
-        "ts-jest": "^29.1.1",
-        "tsconfig-paths-webpack-plugin": "^4.1.0"
+    "./webpack/react": {
+      "types": "./dist/webpack/presets/reactPreset.d.ts",
+      "require": "./dist/webpack/presets/reactPreset.js",
+      "import": "./dist/webpack/presets/reactPreset.js"
     },
-    "devDependencies": {
-        "@types/eslint-plugin-jsx-a11y": "^6.10.1",
-        "@types/html-webpack-plugin": "^3.2.9",
-        "@types/node": "^22.10.1",
-        "@types/webpack-bundle-analyzer": "^4.7.0",
-        "@types/webpack-dev-server": "^4.7.1",
-        "@typescript-eslint/eslint-plugin": "^8.49.0",
-        "@typescript-eslint/parser": "^8.49.0",
-        "@vitest/coverage-v8": "^4.0.15",
-        "@vitest/ui": "^4.0.15",
-        "eslint": "^9.39.1",
-        "eslint-import-resolver-typescript": "^4.4.4",
-        "eslint-plugin-i18next": "^6.1.3",
-        "eslint-plugin-import": "^2.32.0",
-        "eslint-plugin-jsx-a11y": "^6.10.2",
-        "eslint-plugin-react": "^7.37.5",
-        "eslint-plugin-react-hooks": "^7.0.1",
-        "html-webpack-plugin": "^5.6.5",
-        "jest": "^30.2.0",
-        "jiti": "^2.6.1",
-        "mini-css-extract-plugin": "^2.9.4",
-        "prettier": "^3.7.4",
-        "stylelint": "^16.26.1",
-        "stylelint-config-standard-scss": "^16.0.0",
-        "tsx": "^4.21.0",
-        "typescript": "^5.7.2",
-        "vitest": "^4.0.15",
-        "webpack": "^5.103.0",
-        "webpack-bundle-analyzer": "^5.1.0",
-        "webpack-dev-server": "^5.2.2"
+    "./vite/react": {
+      "types": "./dist/vite/presets/reactPreset.d.ts",
+      "require": "./dist/vite/presets/reactPreset.js",
+      "import": "./dist/vite/presets/reactPreset.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "clean": "rm -rf dist",
+    "prepublishOnly": "npm run format && npm run clean && npm run build && npm run lint",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "lint": "NODE_OPTIONS='--import tsx' eslint .",
+    "lint:fix": "NODE_OPTIONS='--import tsx' eslint . --fix",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,css,scss,md,yml,yaml}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,css,scss,md,yml,yaml}\"",
+    "prepare": "husky install",
+    "pre-commit": "lint-staged",
+    "commitlint": "commitlint --edit",
+    "build:analyze": "npm run clean && npm run build && npx webpack-bundle-analyzer dist/*.js",
+    "build:measure": "npm run clean && npm run build && npx speed-measure-webpack-plugin",
+    "build:bundlesize": "npx bundlesize",
+    "performance:test": "npx lighthouse-ci autorun",
+    "security:audit": "npm audit",
+    "security:audit:fix": "npm audit fix",
+    "security:audit:json": "npm audit --json > security-audit.json",
+    "license:check": "npx license-checker --summary",
+    "license:check:json": "npx license-checker --json > license-report.json",
+    "ci:full": "npm run lint && npm run test:coverage && npm run security:audit && npm run build:bundlesize",
+    "ci:build": "npm run clean && npm run build",
+    "ci:quality": "npm run lint && npm run format:check",
+    "metrics:collect": "npm run build:bundlesize && npm run performance:test && npm run security:audit:json && npm run license:check:json",
+    "metrics:performance": "npm run build && npx lighthouse-ci autorun",
+    "metrics:bundlesize": "npm run build && npx bundlesize",
+    "metrics:buildtime": "npm run build && npx speed-measure-webpack-plugin",
+    "monitor:performance": "npm run build && node -e \"console.log('Performance monitoring completed')\"",
+    "monitor:health": "npm run build && node -e \"const { BuildHealthScoring } = require('./dist/webpack/utils/buildHealthScoring'); console.log('Build health analysis completed')\"",
+    "monitor:bundle": "npm run build && node -e \"const { BundleAnalyzer } = require('./dist/webpack/utils/bundleAnalysis'); console.log('Bundle analysis completed')\"",
+    "monitor:cache": "npm run build && node -e \"const { BuildCacheAnalyzer } = require('./dist/webpack/utils/buildCacheAnalysis'); console.log('Cache analysis completed')\"",
+    "monitor:ci": "npm run build && node -e \"const { CIPerformanceMonitoring } = require('./dist/webpack/monitoring/ciPerformanceMonitoring'); console.log('CI monitoring completed')\"",
+    "monitor:environments": "npm run build && node -e \"const { EnvironmentPerformanceComparison } = require('./dist/webpack/utils/environmentPerformanceComparison'); console.log('Environment comparison completed')\"",
+    "monitor:comprehensive": "npm run build && node -e \"const { ComprehensivePerformanceReporting } = require('./dist/webpack/monitoring/comprehensivePerformanceReporting'); console.log('Comprehensive monitoring completed')\"",
+    "report:performance": "npm run build && node scripts/generate-performance-report.js",
+    "report:ci": "npm run build && node scripts/generate-ci-report.js",
+    "report:environments": "npm run build && node scripts/generate-environment-report.js",
+    "report:executive": "npm run build && node scripts/generate-executive-dashboard.js",
+    "analyze:regressions": "npm run build && node scripts/analyze-performance-regressions.js",
+    "validate:budgets": "npm run build && node scripts/validate-performance-budgets.js",
+    "optimize:recommendations": "npm run build && node scripts/generate-optimization-recommendations.js",
+    "trend:analysis": "npm run build && node scripts/performance-trend-analysis.js",
+    "alert:performance": "npm run build && node scripts/performance-alerting.js",
+    "dashboard:real-time": "npm run build && node scripts/real-time-performance-dashboard.js"
+  },
+  "keywords": [
+    "vite",
+    "vite-config",
+    "webpack",
+    "webpack-config",
+    "eslint",
+    "eslint-config",
+    "jest",
+    "jest-preset",
+    "stylelint",
+    "stylelint-config",
+    "typescript",
+    "react",
+    "frontend",
+    "build-tools",
+    "config-preset",
+    "vitest",
+    "vitest-preset"
+  ],
+  "author": {
+    "name": "e7f3",
+    "url": "https://github.com/e7f3"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://npm.pkg.github.com/"
+  },
+  "peerDependencies": {
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "@typescript-eslint/parser": "^8.0.0",
+    "eslint": "^8.0.0 || ^9.0.0",
+    "eslint-plugin-import": "^2.29.0",
+    "eslint-plugin-jsx-a11y": "^6.8.0",
+    "eslint-plugin-react": "^7.33.0",
+    "eslint-plugin-react-hooks": "^4.6.0 || ^5.0.0",
+    "jest": "^29.0.0",
+    "stylelint": "^15.0.0 || ^16.0.0",
+    "typescript": "^5.0.0",
+    "webpack": "^5.0.0"
+  },
+  "peerDependenciesMeta": {
+    "webpack": {
+      "optional": true
     },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/e7f3/frontend-config.git"
+    "vite": {
+      "optional": true
     },
-    "bugs": {
-        "url": "https://github.com/e7f3/frontend-config/issues"
+    "eslint": {
+      "optional": true
     },
-    "homepage": "https://github.com/e7f3/frontend-config#readme"
+    "stylelint": {
+      "optional": true
+    },
+    "jest": {
+      "optional": true
+    },
+    "@typescript-eslint/parser": {
+      "optional": true
+    },
+    "@typescript-eslint/eslint-plugin": {
+      "optional": true
+    },
+    "eslint-plugin-import": {
+      "optional": true
+    },
+    "eslint-plugin-jsx-a11y": {
+      "optional": true
+    },
+    "eslint-plugin-react": {
+      "optional": true
+    },
+    "eslint-plugin-react-hooks": {
+      "optional": true
+    }
+  },
+  "optionalDependencies": {
+    "@swc/core": "^1.0.0",
+    "vite": "^7.2.7"
+  },
+  "dependencies": {
+    "@eslint/eslintrc": "^3.2.0",
+    "@eslint/js": "^9.17.0",
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.5.11",
+    "@testing-library/jest-dom": "^6.1.0",
+    "@testing-library/react": "^14.1.0",
+    "babel-jest": "^29.7.0",
+    "compression-webpack-plugin": "^11.0.0",
+    "dotenv-webpack": "^8.0.1",
+    "jest-environment-jsdom": "^29.7.0",
+    "postcss": "^8.4.32",
+    "react-refresh": "^0.14.0",
+    "sass": "^1.69.5",
+    "stylelint-order": "^6.0.4",
+    "stylelint-semantic-groups": "^1.2.0",
+    "ts-jest": "^29.1.1",
+    "tsconfig-paths-webpack-plugin": "^4.1.0"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^20.2.0",
+    "@commitlint/config-conventional": "^20.2.0",
+    "@playwright/test": "^1.50.1",
+    "@types/eslint-plugin-jsx-a11y": "^6.10.1",
+    "@types/html-webpack-plugin": "^3.2.9",
+    "@types/node": "^22.10.1",
+    "@types/webpack-bundle-analyzer": "^4.7.0",
+    "@types/webpack-dev-server": "^4.7.1",
+    "@typescript-eslint/eslint-plugin": "^8.49.0",
+    "@typescript-eslint/parser": "^8.49.0",
+    "@vitest/coverage-v8": "^4.0.15",
+    "@vitest/ui": "^4.0.15",
+    "bundlesize": "^0.18.1",
+    "eslint": "^9.39.1",
+    "eslint-import-resolver-typescript": "^4.4.4",
+    "eslint-plugin-i18next": "^6.1.3",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "html-webpack-plugin": "^5.6.5",
+    "husky": "^9.1.7",
+    "jest": "^30.2.0",
+    "jiti": "^2.6.1",
+    "license-checker": "^25.0.1",
+    "lighthouse-ci": "^1.10.0",
+    "lint-staged": "^16.2.7",
+    "mini-css-extract-plugin": "^2.9.4",
+    "nsp": "^3.2.1",
+    "pixelmatch": "^5.3.0",
+    "pngjs": "^7.0.0",
+    "prettier": "^3.7.4",
+    "speed-measure-webpack-plugin": "^1.5.0",
+    "stylelint": "^16.26.1",
+    "stylelint-config-standard-scss": "^16.0.0",
+    "tsx": "^4.21.0",
+    "typescript": "^5.7.2",
+    "vitest": "^4.0.15",
+    "webpack": "^5.103.0",
+    "webpack-bundle-analyzer": "^5.1.0",
+    "webpack-dev-server": "^5.2.2",
+    "webpackbar": "^7.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/e7f3/frontend-config.git"
+  },
+  "bugs": {
+    "url": "https://github.com/e7f3/frontend-config/issues"
+  },
+  "homepage": "https://github.com/e7f3/frontend-config#readme"
 }
