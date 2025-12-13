@@ -4,31 +4,13 @@ import { typescriptPreset } from './presets/typescriptPreset'
 import type { JestConfig, JestOptions } from './types/config'
 
 /**
- * Build Jest configuration with preset support
- *
- * Applies preset defaults first, then user options override them.
- * Only sets fallback values for options not provided by preset or user.
- *
- * @param options - Jest configuration options
+ * Jest configuration builder with intelligent preset system.
+ */
+
+/**
+ * Builds Jest configuration with intelligent preset support.
+ * @param options - Configuration options including preset selection
  * @returns Complete Jest configuration object
- *
- * @example
- * ```
- * import { buildJestConfig } from '@e7f3/frontend-config/jest'
- *
- * export default buildJestConfig({
- *   preset: 'react',
- *   collectCoverage: true,
- *   coverageThreshold: {
- *     global: {
- *       branches: 80,
- *       functions: 80,
- *       lines: 80,
- *       statements: 80,
- *     },
- *   },
- * })
- * ```
  */
 export function buildJestConfig(options: JestOptions = {}): JestConfig {
     // Step 1: Get preset configuration
@@ -66,7 +48,7 @@ export function buildJestConfig(options: JestOptions = {}): JestConfig {
         rootDir: options.rootDir ?? presetConfig.rootDir ?? process.cwd(),
         collectCoverage: options.collectCoverage ?? presetConfig.collectCoverage ?? false,
         coverageDirectory: options.coverageDirectory ?? presetConfig.coverageDirectory ?? 'coverage',
-        testTimeout: options.testTimeout ?? presetConfig.testTimeout ?? 5000,
+        testTimeout: options.testTimeout ?? presetConfig.testTimeout ?? 3000,
         verbose: options.verbose ?? presetConfig.verbose ?? false,
         bail: options.bail ?? presetConfig.bail ?? false,
         notify: options.notify ?? presetConfig.notify ?? false,
