@@ -1,5 +1,14 @@
 import type { BuildOptions } from '../types/config'
 
+/**
+ * Webpack development server configuration builder.
+ */
+
+/**
+ * Builds webpack development server configuration.
+ * @param options - Build options containing development configuration
+ * @returns Webpack dev server configuration object
+ */
 export function buildDevServer(options: BuildOptions): any {
     const { isDev, port, paths } = options
 

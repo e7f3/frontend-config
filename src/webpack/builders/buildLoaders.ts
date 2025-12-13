@@ -9,9 +9,21 @@ import { buildTsLoader } from '../loaders/buildTsLoader'
 import type { BuildOptions } from '../types/config'
 
 /**
- * Main loaders builder
- * Combines all loader configurations into a single array
+ * Webpack loaders configuration builder.
  */
-export function buildLoaders(options: BuildOptions): RuleSetRule[] {
-    return [buildBabelLoader(), buildTsLoader(options), buildCssLoader(options), buildSvgLoader(), buildImageLoader(), buildFontLoader()]
+
+/**
+ * Builds webpack loaders configuration.
+ * @param options - Build options containing environment-specific loader configurations
+ * @returns Array of webpack RuleSetRule configurations for all supported file types
+ */
+export function buildLoaders(options: BuildOptions): Array<RuleSetRule> {
+    return [
+        buildBabelLoader(),
+        buildTsLoader(options),
+        buildCssLoader(options),
+        buildSvgLoader(),
+        buildImageLoader(),
+        buildFontLoader(),
+    ]
 }

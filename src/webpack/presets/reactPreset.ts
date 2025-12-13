@@ -4,8 +4,13 @@ import { buildWebpackConfig } from '../builders/buildWebpackConfig'
 import type { BuildOptions } from '../types/config'
 
 /**
- * React preset
- * Opinionated webpack configuration for React projects
+ * React webpack preset.
+ */
+
+/**
+ * React preset builder.
+ * @param options - Build options including paths, mode, and React-specific settings
+ * @returns Webpack configuration optimized for React development and production
  */
 export function reactPreset(options: BuildOptions): Configuration {
     return buildWebpackConfig({

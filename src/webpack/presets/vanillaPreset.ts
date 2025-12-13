@@ -4,8 +4,13 @@ import { buildWebpackConfig } from '../builders/buildWebpackConfig'
 import type { BuildOptions } from '../types/config'
 
 /**
- * Vanilla preset
- * Opinionated webpack configuration for vanilla JavaScript projects
+ * Vanilla JavaScript webpack preset.
+ */
+
+/**
+ * Vanilla JavaScript preset builder.
+ * @param options - Build options including paths, mode, and vanilla JavaScript settings
+ * @returns Webpack configuration optimized for vanilla JavaScript development and production
  */
 export function vanillaPreset(options: BuildOptions): Configuration {
     return buildWebpackConfig({

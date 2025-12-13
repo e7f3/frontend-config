@@ -3,8 +3,13 @@ import type { ResolveOptions } from 'webpack'
 import type { BuildOptions } from '../types/config'
 
 /**
- * Main resolvers builder
- * Configures module resolution for the webpack configuration
+ * Webpack module resolution configuration builder.
+ */
+
+/**
+ * Builds webpack module resolution configuration.
+ * @param options - Build options containing path configuration
+ * @returns Webpack ResolveOptions configuration for module resolution
  */
 export function buildResolvers(options: BuildOptions): ResolveOptions {
     const { paths } = options

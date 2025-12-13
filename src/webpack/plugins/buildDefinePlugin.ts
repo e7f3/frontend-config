@@ -3,8 +3,13 @@ import webpack from 'webpack'
 import type { BuildOptions } from '../types/config'
 
 /**
- * Builds DefinePlugin configuration
- * Injects global constants at compile time
+ * Define plugin configuration for webpack.
+ */
+
+/**
+ * Builds DefinePlugin configuration for injecting global constants.
+ * @param options - Build options containing environment and configuration
+ * @returns DefinePlugin instance configured for the current environment
  */
 export function buildDefinePlugin(options: BuildOptions): webpack.DefinePlugin {
     const { mode, isDev, env } = options

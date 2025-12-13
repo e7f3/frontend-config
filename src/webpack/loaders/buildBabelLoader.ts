@@ -1,8 +1,12 @@
 import type { RuleSetRule } from 'webpack'
 
 /**
- * Builds Babel loader configuration
- * Handles JSX/JS/TSX/TS transpilation with React and TypeScript presets
+ * Babel loader configuration builder.
+ */
+
+/**
+ * Builds Babel loader configuration.
+ * @returns RuleSetRule configuration for Babel loader
  */
 export function buildBabelLoader(): RuleSetRule {
     return {

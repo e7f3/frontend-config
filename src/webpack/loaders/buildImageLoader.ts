@@ -1,8 +1,12 @@
 import type { RuleSetRule } from 'webpack'
 
 /**
- * Builds image loader configuration
- * Handles PNG, JPG, JPEG, GIF, WebP formats
+ * Image loader configuration for webpack.
+ */
+
+/**
+ * Builds image loader configuration.
+ * @returns RuleSetRule configuration for image asset processing
  */
 export function buildImageLoader(): RuleSetRule {
     return {
