@@ -824,7 +824,7 @@ export class PerformanceMonitoringPlugin {
             
             // Calculate overlap
             let overlapCount = 0
-            for (const moduleId of chunkModules) {
+            for (const moduleId of Array.from(chunkModules)) {
                 if (otherChunkModules.has(moduleId)) {
                     overlapCount++
                 }
