@@ -3,8 +3,13 @@ import HtmlWebpackPlugin from 'html-webpack-plugin'
 import type { BuildOptions } from '../types/config'
 
 /**
- * Builds HtmlWebpackPlugin configuration
- * Generates HTML file with script tags for bundled assets
+ * HTML plugin configuration for webpack.
+ */
+
+/**
+ * Builds HtmlWebpackPlugin configuration.
+ * @param options - Build options containing paths and environment settings
+ * @returns HtmlWebpackPlugin instance configured for current environment
  */
 export function buildHtmlPlugin(options: BuildOptions): HtmlWebpackPlugin {
     const { paths, isDev } = options
@@ -15,16 +20,16 @@ export function buildHtmlPlugin(options: BuildOptions): HtmlWebpackPlugin {
         minify: isDev
             ? false
             : {
-                  removeComments: true,
-                  collapseWhitespace: true,
-                  removeRedundantAttributes: true,
-                  useShortDoctype: true,
-                  removeEmptyAttributes: true,
-                  removeStyleLinkTypeAttributes: true,
-                  keepClosingSlash: true,
-                  minifyJS: true,
-                  minifyCSS: true,
-                  minifyURLs: true,
-              },
+                removeComments: true,
+                collapseWhitespace: true,
+                removeRedundantAttributes: true,
+                useShortDoctype: true,
+                removeEmptyAttributes: true,
+                removeStyleLinkTypeAttributes: true,
+                keepClosingSlash: true,
+                minifyJS: true,
+                minifyCSS: true,
+                minifyURLs: true,
+            },
     })
 }

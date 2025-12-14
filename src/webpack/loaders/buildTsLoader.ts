@@ -3,8 +3,13 @@ import type { RuleSetRule } from 'webpack'
 import { BuildOptions } from '../types/config'
 
 /**
- * Builds TypeScript loader configuration
- * Uses esbuild-loader in dev for speed, ts-loader in prod for type safety
+ * TypeScript loader configuration for webpack.
+ */
+
+/**
+ * Builds TypeScript loader configuration.
+ * @param options - Build options containing environment configuration
+ * @returns RuleSetRule configuration for TypeScript processing
  */
 export function buildTsLoader(options: BuildOptions): RuleSetRule {
     const { isDev } = options

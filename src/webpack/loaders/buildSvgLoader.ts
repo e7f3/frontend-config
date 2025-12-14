@@ -1,8 +1,12 @@
 import type { RuleSetRule } from 'webpack'
 
 /**
- * Builds SVG loader configuration
- * Uses SVGR to import SVGs as React components with fallback to asset/resource
+ * SVG loader configuration for webpack.
+ */
+
+/**
+ * Builds SVG loader configuration.
+ * @returns RuleSetRule configuration for SVG processing
  */
 export function buildSvgLoader(): RuleSetRule {
     return {

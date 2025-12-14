@@ -6,8 +6,13 @@ import { buildResolvers } from './buildResolvers'
 import type { BuildOptions, WebpackConfiguration } from '../types/config'
 
 /**
- * Main webpack orchestrator
- * Combines all builders into a complete webpack configuration
+ * Webpack configuration orchestrator.
+ */
+
+/**
+ * Builds webpack configuration.
+ * @param options - Build configuration options including paths, mode, and optimization settings
+ * @returns Complete Webpack configuration ready for use
  */
 export function buildWebpackConfig(options: BuildOptions): WebpackConfiguration {
     const isProd = options.mode === 'production'

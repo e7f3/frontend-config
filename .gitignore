@@ -32,3 +32,7 @@ coverage/
 .env
 .env.local
 .env.*.local
+.npmrc
+
+# Documentation (to prevent push protection issues)
+improvement_plan.md

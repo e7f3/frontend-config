@@ -1,0 +1,37 @@
+version: 2
+updates:
+  # Enable version updates for npm
+  - package-ecosystem: 'npm'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+      time: '09:00'
+    # Open pull requests for security updates
+    open-pull-requests-limit: 10
+    # Reviewers to assign to PRs
+    reviewers:
+      - 'e7f3'
+    # Labels to apply to PRs
+    labels:
+      - 'dependencies'
+      - 'automated'
+    # Commit message prefix
+    commit-message:
+      prefix: 'deps'
+      include: 'scope'
+    # Allow these package types to be updated
+    allow:
+      - dependency-type: 'direct'
+      - dependency-type: 'indirect'
+    # Ignore these dependencies
+    ignore:
+      # Ignore React major version updates
+      - dependency-name: 'react'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'react-dom'
+        update-types: ['version-update:semver-major']
+    # Security updates
+    security-updates:
+      # Open PRs for security updates immediately
+      open-pull-requests-limit: 20

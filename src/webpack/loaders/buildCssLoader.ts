@@ -4,8 +4,13 @@ import type { RuleSetRule } from 'webpack'
 import { BuildOptions } from '../types/config'
 
 /**
- * Builds CSS/SCSS loader configuration
- * Handles CSS modules, SCSS preprocessing, and PostCSS
+ * CSS/SCSS loader configuration builder.
+ */
+
+/**
+ * Builds CSS/SCSS loader configuration.
+ * @param options - Build options containing environment configuration
+ * @returns RuleSetRule configuration for CSS processing
  */
 export function buildCssLoader(options: BuildOptions): RuleSetRule {
     const { isDev } = options
@@ -20,7 +25,9 @@ export function buildCssLoader(options: BuildOptions): RuleSetRule {
                 options: {
                     modules: {
                         auto: (resPath: string) => resPath.includes('.module.'),
-                        localIdentName: isDev ? '[path][name]__[local]--[hash:base64:5]' : '[hash:base64:8]',
+                        localIdentName: isDev
+                            ? '[path][name]__[local]--[hash:base64:5]'
+                            : '[hash:base64:8]',
                     },
                     sourceMap: isDev,
                 },

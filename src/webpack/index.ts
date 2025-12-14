@@ -1,8 +1,23 @@
 'use strict'
 
-import { buildWebpackConfig } from './builders/buildWebpackConfig'
-import { reactPreset } from './presets/reactPreset'
-import { typescriptPreset } from './presets/typescriptPreset'
-import { vanillaPreset } from './presets/vanillaPreset'
+/**
+ * Webpack configuration system with performance optimizations and modular builders.
+ */
 
-export { reactPreset, vanillaPreset, typescriptPreset, buildWebpackConfig }
+// Main configuration builder
+export { buildWebpackConfig } from './builders/buildWebpackConfig'
+
+// Preset configurations
+export { reactPreset } from './presets/reactPreset'
+export { vanillaPreset } from './presets/vanillaPreset'
+export { typescriptPreset } from './presets/typescriptPreset'
+
+// Type definitions
+export type { BuildOptions, BuildPaths, EnvVariables } from './types/config'
+export type { 
+    BuildPerformanceMetrics, 
+    BundleAnalysis, 
+    PerformanceHint,
+    BuildHealthScore,
+    PerformanceBudget, 
+} from './types/performance'

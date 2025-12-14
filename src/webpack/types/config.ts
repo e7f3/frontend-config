@@ -1,8 +1,10 @@
 import type { Configuration } from 'webpack'
 import type { Configuration as DevServerConfiguration } from 'webpack-dev-server'
 
+import type { PerformancePluginOptions, BuildMonitoringConfig } from './performance'
+
 /**
- * Webpack build paths configuration
+ * Webpack build paths configuration.
  */
 export interface BuildPaths {
     /** Entry point file path (e.g., './src/index.tsx') */
@@ -18,7 +20,7 @@ export interface BuildPaths {
 }
 
 /**
- * Webpack build configuration options
+ * Webpack build configuration options.
  */
 export interface BuildOptions {
     /** Build mode - 'development' or 'production' */
@@ -37,10 +39,14 @@ export interface BuildOptions {
     platform?: NodeJS.Platform
     /** Env variables */
     env?: EnvVariables
+    /** Performance monitoring configuration */
+    performanceMonitoring?: PerformancePluginOptions
+    /** Build monitoring configuration */
+    buildMonitoring?: BuildMonitoringConfig
 }
 
 /**
- * Environment variables for webpack configuration
+ * Environment variables for webpack configuration.
  */
 export interface EnvVariables {
     /** Build mode */

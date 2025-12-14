@@ -1,24 +1,24 @@
 /**
- * Shared types used across multiple configuration builders
+ * Shared types used across multiple configuration builders.
  */
 
 /**
- * Build mode - development or production
+ * Build mode - development or production.
  */
 export type BuildMode = 'development' | 'production'
 
 /**
- * Build environment - local, staging, or production
+ * Build environment - local, staging, or production.
  */
 export type BuildEnv = 'local' | 'staging' | 'production'
 
 /**
- * Target platform for the build
+ * Target platform for the build.
  */
 export type BuildPlatform = 'desktop' | 'mobile' | 'universal'
 
 /**
- * Common paths used in build configurations
+ * Common paths used in build configurations.
  */
 export interface BuildPaths {
     /** Entry point for the application */
@@ -27,8 +27,8 @@ export interface BuildPaths {
     output: string
     /** Source directory */
     src: string
-    /** Public/static assets directory (optional) */
+    /** Public/static assets directory */
     public?: string
-    /** HTML template file (optional, for webpack) */
+    /** HTML template file for webpack */
     html?: string
 }
