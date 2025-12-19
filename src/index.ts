@@ -10,13 +10,6 @@ export { reactPreset as webpackReactPreset } from './webpack/presets/reactPreset
 export { vanillaPreset as webpackVanillaPreset } from './webpack/presets/vanillaPreset'
 export { typescriptPreset as webpackTypescriptPreset } from './webpack/presets/typescriptPreset'
 export type { BuildOptions as WebpackBuildOptions, BuildPaths as WebpackBuildPaths, EnvVariables } from './webpack/types/config'
-export type {
-    BuildPerformanceMetrics,
-    BundleAnalysis,
-    PerformanceHint,
-    BuildHealthScore,
-    PerformanceBudget,
-} from './webpack/types/performance'
 
 // Vite exports
 export { buildViteConfig } from './vite/builders/buildViteConfig'

@@ -5,7 +5,6 @@ import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 import { buildDefinePlugin } from '../plugins/buildDefinePlugin'
 import { buildHtmlPlugin } from '../plugins/buildHtmlPlugin'
 import { buildMiniCssExtractPlugin } from '../plugins/buildMiniCssExtractPlugin'
-import { PerformanceMonitoringPlugin } from '../plugins/buildPerformanceMonitoringPlugin'
 import { buildProgressPlugin } from '../plugins/buildProgressPlugin'
 import type { BuildOptions } from '../types/config'
 
@@ -16,10 +15,10 @@ import type { BuildOptions } from '../types/config'
 /**
  * Builds webpack plugins configuration.
  * @param options - Build options including environment settings and feature toggles
- * @returns Array of webpack plugin instances configured for the current environment
+ * @returns Array of webpack plugin instances configured for current environment
  */
 export function buildPlugins(options: BuildOptions): Array<webpack.WebpackPluginInstance | webpack.WebpackPluginFunction> {
-    const { isDev, analyzer, performanceMonitoring } = options
+    const { isDev, analyzer } = options
 
     const plugins = [buildHtmlPlugin(options), buildDefinePlugin(options), buildMiniCssExtractPlugin(options), buildProgressPlugin(options)]
 
@@ -31,11 +30,6 @@ export function buildPlugins(options: BuildOptions): Array<webpack.WebpackPlugin
     // Add bundle analyzer in development mode if enabled
     if (analyzer) {
         plugins.push(new BundleAnalyzerPlugin())
-    }
-
-    // Add performance monitoring plugin if enabled
-    if (performanceMonitoring) {
-        plugins.push(new PerformanceMonitoringPlugin(performanceMonitoring))
     }
 
     return plugins

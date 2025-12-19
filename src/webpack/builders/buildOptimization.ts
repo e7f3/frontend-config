@@ -182,36 +182,3 @@ export function buildPersistentCache(options: BuildOptions): Configuration['cach
         compression: 'gzip' as const,
     }
 }
-
-/**
- * Builds performance monitoring configuration.
- * @param options - Build options containing environment configuration
- * @returns Webpack performance configuration
- */
-export function buildPerformanceMonitoring(options: BuildOptions): Configuration['performance'] {
-    const { isDev } = options
-
-    if (isDev) {
-        return {
-            // Show performance hints in development
-            hints: 'warning',
-            // Maximum asset size (2MB)
-            maxAssetSize: 2097152,
-            // Maximum entry point size (2MB)
-            maxEntrypointSize: 2097152,
-        }
-    }
-
-    return {
-        // Strict performance hints in production
-        hints: 'error',
-        // Smaller bundle size limits for production
-        maxAssetSize: 1048576, // 1MB
-        maxEntrypointSize: 1048576, // 1MB
-        // Asset filter function
-        assetFilter: (assetFilename: string) => {
-            // Don't show hints for source maps or manifest files
-            return !assetFilename.endsWith('.map') && !assetFilename.includes('manifest')
-        },
-    }
-}
