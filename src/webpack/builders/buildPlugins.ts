@@ -18,17 +18,10 @@ import type { BuildOptions } from '../types/config'
  * @param options - Build options including environment settings and feature toggles
  * @returns Array of webpack plugin instances configured for the current environment
  */
-export function buildPlugins(
-    options: BuildOptions,
-): Array<webpack.WebpackPluginInstance | webpack.WebpackPluginFunction> {
+export function buildPlugins(options: BuildOptions): Array<webpack.WebpackPluginInstance | webpack.WebpackPluginFunction> {
     const { isDev, analyzer, performanceMonitoring } = options
 
-    const plugins = [
-        buildHtmlPlugin(options),
-        buildDefinePlugin(options),
-        buildMiniCssExtractPlugin(options),
-        buildProgressPlugin(options),
-    ]
+    const plugins = [buildHtmlPlugin(options), buildDefinePlugin(options), buildMiniCssExtractPlugin(options), buildProgressPlugin(options)]
 
     // Add React Refresh plugin in development mode
     if (isDev) {

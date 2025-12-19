@@ -14,49 +14,55 @@ export function typescriptPreset(): JestConfig {
         roots: ['<rootDir>/src'],
         testMatch: ['**/__tests__/**/*.{ts,tsx}', '**/*.{spec,test}.{ts,tsx}'],
         moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
-        
+
         // SWC-Jest configuration for optimal TypeScript performance (2000%+ improvement over ts-jest)
         transform: {
-            '^.+\\.(ts|tsx)$': ['@swc/jest', {
-                jsc: {
-                    parser: {
-                        syntax: 'typescript',
-                        tsx: true,
-                        decorators: true,
-                        dynamicImport: true,
-                    },
-                    transform: {
-                        react: {
-                            runtime: 'automatic',
+            '^.+\\.(ts|tsx)$': [
+                '@swc/jest',
+                {
+                    jsc: {
+                        parser: {
+                            syntax: 'typescript',
+                            tsx: true,
+                            decorators: true,
+                            dynamicImport: true,
                         },
-                        typescript: {
-                            decoratorsMetadata: true,
+                        transform: {
+                            react: {
+                                runtime: 'automatic',
+                            },
+                            typescript: {
+                                decoratorsMetadata: true,
+                            },
                         },
+                        target: 'es2022',
+                        externalHelpers: false,
+                        keepClassNames: true,
                     },
-                    target: 'es2022',
-                    externalHelpers: false,
-                    keepClassNames: true,
+                    sourceMaps: true,
+                    inlineSources: true,
                 },
-                sourceMaps: true,
-                inlineSources: true,
-            }],
-            '^.+\\.(js|jsx)$': ['@swc/jest', {
-                jsc: {
-                    parser: {
-                        syntax: 'ecmascript',
-                        jsx: true,
-                    },
-                    transform: {
-                        react: {
-                            runtime: 'automatic',
+            ],
+            '^.+\\.(js|jsx)$': [
+                '@swc/jest',
+                {
+                    jsc: {
+                        parser: {
+                            syntax: 'ecmascript',
+                            jsx: true,
+                        },
+                        transform: {
+                            react: {
+                                runtime: 'automatic',
+                            },
                         },
                     },
                 },
-            }],
+            ],
         },
-        
+
         collectCoverageFrom: ['src/**/*.{ts,tsx}', '!src/**/*.d.ts', '!src/**/__tests__/**'],
-        
+
         // Performance optimizations
         cacheDirectory: '<rootDir>/.jest-cache',
         cache: true,

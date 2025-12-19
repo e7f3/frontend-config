@@ -9,15 +9,8 @@ export function typescriptPreset(): VitestConfig {
         test: {
             globals: true,
             environment: 'node',
-            include: [
-                '**/__tests__/**/*.{ts,tsx}',
-                '**/*.{spec,test}.{ts,tsx}',
-            ],
-            exclude: [
-                '**/node_modules/**',
-                '**/dist/**',
-                '**/build/**',
-            ],
+            include: ['**/__tests__/**/*.{ts,tsx}', '**/*.{spec,test}.{ts,tsx}'],
+            exclude: ['**/node_modules/**', '**/dist/**', '**/build/**'],
         },
     }
 }

@@ -1,10 +1,10 @@
-import type { 
-    BuildPerformanceMetrics, 
-    BuildHealthScore, 
-    PerformanceRegression, 
+import type {
+    BuildPerformanceMetrics,
+    BuildHealthScore,
+    PerformanceRegression,
     PerformanceBudget,
     HistoricalPerformanceData,
-    AssetOptimizationRecommendation, 
+    AssetOptimizationRecommendation,
 } from '../types/performance'
 
 /**
@@ -42,11 +42,7 @@ export class BuildHealthScoring {
 
         // Calculate weighted overall score
         const overallScore = Math.round(
-            buildTimeScore * 0.25 +
-            bundleSizeScore * 0.25 +
-            performanceScore * 0.2 +
-            cacheScore * 0.15 +
-            memoryScore * 0.15,
+            buildTimeScore * 0.25 + bundleSizeScore * 0.25 + performanceScore * 0.2 + cacheScore * 0.15 + memoryScore * 0.15
         )
 
         // Generate grade and status
@@ -83,7 +79,7 @@ export class BuildHealthScoring {
      */
     public detectRegressions(
         currentMetrics: BuildPerformanceMetrics,
-        historicalData: Array<HistoricalPerformanceData>,
+        historicalData: Array<HistoricalPerformanceData>
     ): Array<PerformanceRegression> {
         const regressions: Array<PerformanceRegression> = []
 
@@ -101,7 +97,7 @@ export class BuildHealthScoring {
                 currentMetrics.totalBuildTime,
                 baseline.totalBuildTime,
                 'build-time',
-                15, // 15% threshold
+                15 // 15% threshold
             )
             if (buildTimeRegression) {
                 regressions.push(buildTimeRegression)
@@ -114,7 +110,7 @@ export class BuildHealthScoring {
                 currentMetrics.bundleAnalysis.totalSize,
                 baseline.bundleAnalysis.totalSize,
                 'bundle-size',
-                10, // 10% threshold
+                10 // 10% threshold
             )
             if (sizeRegression) {
                 regressions.push(sizeRegression)
@@ -127,7 +123,7 @@ export class BuildHealthScoring {
                 currentMetrics.peakMemoryUsage,
                 baseline.peakMemoryUsage,
                 'memory',
-                20, // 20% threshold
+                20 // 20% threshold
             )
             if (memoryRegression) {
                 regressions.push(memoryRegression)
@@ -142,16 +138,14 @@ export class BuildHealthScoring {
      * @param metrics - Build performance metrics to analyze
      * @returns Array of optimization recommendations with priority levels
      */
-    public generateOptimizationRecommendations(
-        metrics: BuildPerformanceMetrics,
-    ): Array<AssetOptimizationRecommendation> {
+    public generateOptimizationRecommendations(metrics: BuildPerformanceMetrics): Array<AssetOptimizationRecommendation> {
         const recommendations: Array<AssetOptimizationRecommendation> = []
 
         if (!metrics.bundleAnalysis) {
             return recommendations
         }
 
-        const { assets, modules, vendorSize, appSize, totalSize } = metrics.bundleAnalysis
+        const { assets, modules, vendorSize, totalSize } = metrics.bundleAnalysis
 
         // Large bundle recommendations
         if (totalSize > this.budgets.bundleSize!) {
@@ -185,8 +179,8 @@ export class BuildHealthScoring {
 
         // Large assets recommendations
         assets
-            .filter(asset => asset.size > 100 * 1024) // Assets > 100KB
-            .forEach(asset => {
+            .filter((asset) => asset.size > 100 * 1024) // Assets > 100KB
+            .forEach((asset) => {
                 const optimizationType = this.getOptimizationType(asset)
                 recommendations.push({
                     assetName: asset.name,
@@ -203,10 +197,10 @@ export class BuildHealthScoring {
 
         // Module optimization recommendations
         const largeModules = modules
-            .filter(module => module.size > 50 * 1024) // Modules > 50KB
+            .filter((module) => module.size > 50 * 1024) // Modules > 50KB
             .slice(0, 5) // Top 5
 
-        largeModules.forEach(module => {
+        largeModules.forEach((module) => {
             recommendations.push({
                 assetName: module.name,
                 currentSize: module.size,
@@ -228,9 +222,7 @@ export class BuildHealthScoring {
      * @param historicalData - Array of historical performance data
      * @returns Performance trend analysis with direction and confidence
      */
-    public analyzePerformanceTrends(
-        historicalData: Array<HistoricalPerformanceData>,
-    ): {
+    public analyzePerformanceTrends(historicalData: Array<HistoricalPerformanceData>): {
         direction: 'improving' | 'declining' | 'stable'
         changePercentage: number
         confidence: number
@@ -254,20 +246,14 @@ export class BuildHealthScoring {
         }
 
         // Analyze trends for key metrics
-        const buildTimeTrend = this.analyzeMetricTrend(
-            historicalData.map(d => d.metrics.totalBuildTime).filter(Boolean),
-        )
-        const bundleSizeTrend = this.analyzeMetricTrend(
-            historicalData.map(d => d.metrics.bundleAnalysis?.totalSize).filter(Boolean),
-        )
-        const memoryTrend = this.analyzeMetricTrend(
-            historicalData.map(d => d.metrics.peakMemoryUsage).filter(Boolean),
-        )
+        const buildTimeTrend = this.analyzeMetricTrend(historicalData.map((d) => d.metrics.totalBuildTime).filter(Boolean))
+        const bundleSizeTrend = this.analyzeMetricTrend(historicalData.map((d) => d.metrics.bundleAnalysis?.totalSize).filter(Boolean))
+        const memoryTrend = this.analyzeMetricTrend(historicalData.map((d) => d.metrics.peakMemoryUsage).filter(Boolean))
 
         // Calculate overall direction
         const trends = [buildTimeTrend, bundleSizeTrend, memoryTrend]
-        const improving = trends.filter(t => t.direction === 'improving').length
-        const declining = trends.filter(t => t.direction === 'declining').length
+        const improving = trends.filter((t) => t.direction === 'improving').length
+        const declining = trends.filter((t) => t.direction === 'declining').length
 
         let overallDirection: 'improving' | 'declining' | 'stable'
         if (improving > declining) {
@@ -280,7 +266,7 @@ export class BuildHealthScoring {
 
         return {
             direction: overallDirection,
-            changePercentage: Math.round((declining - improving) / trends.length * 100),
+            changePercentage: Math.round(((declining - improving) / trends.length) * 100),
             confidence: this.calculateTrendConfidence(historicalData),
             trends: {
                 buildTime: buildTimeTrend.direction,
@@ -326,7 +312,7 @@ export class BuildHealthScoring {
 
         // Deduct points for performance hints
         if (metrics.performanceHints) {
-            metrics.performanceHints.forEach(hint => {
+            metrics.performanceHints.forEach((hint) => {
                 if (hint.severity === 'error') score -= 20
                 else if (hint.severity === 'warning') score -= 10
             })
@@ -345,7 +331,7 @@ export class BuildHealthScoring {
         // Simplified cache score calculation
         // In a real implementation, this would analyze actual cache hit rates
         // Base score calculation
-        
+
         // Adjust based on build time (faster builds often indicate better caching)
         const buildTime = metrics.totalBuildTime
         if (buildTime < 10000) return 90 // Fast build
@@ -368,7 +354,10 @@ export class BuildHealthScoring {
         return 30
     }
 
-    private generateGradeAndStatus(score: number): { grade: 'A' | 'B' | 'C' | 'D' | 'E' | 'F', status: 'excellent' | 'good' | 'fair' | 'poor' | 'critical' } {
+    private generateGradeAndStatus(score: number): {
+        grade: 'A' | 'B' | 'C' | 'D' | 'E' | 'F'
+        status: 'excellent' | 'good' | 'fair' | 'poor' | 'critical'
+    } {
         let grade: 'A' | 'B' | 'C' | 'D' | 'E' | 'F'
         let status: 'excellent' | 'good' | 'fair' | 'poor' | 'critical'
 
@@ -432,13 +421,13 @@ export class BuildHealthScoring {
         currentValue: number,
         baselineValue: number,
         type: 'build-time' | 'bundle-size' | 'memory' | 'performance',
-        thresholdPercent: number,
+        thresholdPercent: number
     ): PerformanceRegression | null {
         const percentageChange = ((currentValue - baselineValue) / baselineValue) * 100
 
         if (percentageChange > thresholdPercent) {
-            const severity = percentageChange > thresholdPercent * 2 ? 'critical' : 
-                percentageChange > thresholdPercent * 1.5 ? 'major' : 'minor'
+            const severity =
+                percentageChange > thresholdPercent * 2 ? 'critical' : percentageChange > thresholdPercent * 1.5 ? 'major' : 'minor'
 
             return {
                 type,
@@ -486,15 +475,9 @@ export class BuildHealthScoring {
         }
 
         // Calculate average values for baseline
-        const totalBuildTime = historicalData.reduce(
-            (sum, d) => sum + d.metrics.totalBuildTime, 0,
-        ) / historicalData.length
-        const avgBundleSize = historicalData.reduce(
-            (sum, d) => sum + (d.metrics.bundleAnalysis?.totalSize || 0), 0,
-        ) / historicalData.length
-        const avgMemory = historicalData.reduce(
-            (sum, d) => sum + (d.metrics.peakMemoryUsage || 0), 0,
-        ) / historicalData.length
+        const totalBuildTime = historicalData.reduce((sum, d) => sum + d.metrics.totalBuildTime, 0) / historicalData.length
+        const avgBundleSize = historicalData.reduce((sum, d) => sum + (d.metrics.bundleAnalysis?.totalSize || 0), 0) / historicalData.length
+        const avgMemory = historicalData.reduce((sum, d) => sum + (d.metrics.peakMemoryUsage || 0), 0) / historicalData.length
 
         return {
             totalBuildTime,
@@ -527,7 +510,7 @@ export class BuildHealthScoring {
         const recentBuilds = historicalData.slice(-5)
         if (recentBuilds.length < 3) return 0.5
 
-        const buildTimes = recentBuilds.map(d => d.metrics.totalBuildTime)
+        const buildTimes = recentBuilds.map((d) => d.metrics.totalBuildTime)
         const avg = buildTimes.reduce((sum, time) => sum + time, 0) / buildTimes.length
         const variance = buildTimes.reduce((sum, time) => sum + Math.pow(time - avg, 2), 0) / buildTimes.length
         const coefficientOfVariation = Math.sqrt(variance) / avg

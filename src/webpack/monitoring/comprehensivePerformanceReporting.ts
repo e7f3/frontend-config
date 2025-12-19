@@ -44,15 +44,17 @@ export class ComprehensivePerformanceReporting {
     private readonly ciMonitoring: CIPerformanceMonitoring
     private readonly reportsDir: string
 
-    constructor(config: {
-        budgets?: PerformanceBudget
-        cacheDir?: string
-        reportsDir?: string
-        ciConfig?: CIPerformanceConfig
-    } = {}) {
+    constructor(
+        config: {
+            budgets?: PerformanceBudget
+            cacheDir?: string
+            reportsDir?: string
+            ciConfig?: CIPerformanceConfig
+        } = {}
+    ) {
         this.healthScoring = new BuildHealthScoring(config.budgets)
         this.cacheAnalyzer = new BuildCacheAnalyzer(config.cacheDir)
-        const budgets = config.budgets as Record<string, unknown> || {}
+        const budgets = (config.budgets as Record<string, unknown>) || {}
         this.environmentComparison = new EnvironmentPerformanceComparison(budgets)
         this.ciMonitoring = new CIPerformanceMonitoring(config.ciConfig)
         this.reportsDir = config.reportsDir || './performance-reports'
@@ -71,7 +73,7 @@ export class ComprehensivePerformanceReporting {
      */
     public async generateBuildReport(
         metrics: BuildPerformanceMetrics,
-        context: BuildContext,
+        context: BuildContext
     ): Promise<{
         reportPath: string
         report: ComprehensivePerformanceReport
@@ -86,7 +88,7 @@ export class ComprehensivePerformanceReporting {
         if (!metrics.bundleAnalysis) {
             throw new Error('Bundle analysis data is required for comprehensive reporting')
         }
-        
+
         const bundleAnalyzer = new BundleAnalyzer(metrics.bundleAnalysis)
         const bundleAnalysis = bundleAnalyzer.generateDetailedAnalysis()
         const optimizationRecommendations = bundleAnalyzer.generateAssetOptimizationRecommendations()
@@ -141,7 +143,7 @@ export class ComprehensivePerformanceReporting {
                 healthScore,
                 optimizationRecommendations,
                 cacheOptimizations,
-                regressions,
+                regressions
             ),
             appendices: {
                 performanceBudgets: this.getPerformanceBudgets(),
@@ -171,7 +173,7 @@ export class ComprehensivePerformanceReporting {
      */
     public async generateCIReport(
         metrics: BuildPerformanceMetrics,
-        context: CIContext,
+        context: CIContext
     ): Promise<{
         reportPath: string
         report: CIPerformanceReport
@@ -204,8 +206,8 @@ export class ComprehensivePerformanceReporting {
             deploymentDecision: {
                 canDeploy: ciResult.canDeploy,
                 recommendation: this.generateDeploymentRecommendation(ciResult),
-                blockingIssues: ciResult.regressions.filter(r => r.isBlocking),
-                warnings: ciResult.regressions.filter(r => !r.isBlocking),
+                blockingIssues: ciResult.regressions.filter((r) => r.isBlocking),
+                warnings: ciResult.regressions.filter((r) => !r.isBlocking),
             },
             performanceTrends: this.ciMonitoring.generatePerformanceTrends(),
             optimizationPlan: this.generateOptimizationPlan(ciResult.healthScore, ciResult.regressions),
@@ -297,7 +299,7 @@ export class ComprehensivePerformanceReporting {
             healthOverview: {
                 grade: healthScore.grade,
                 status: healthScore.status,
-                criticalIssues: healthScore.recommendations.filter(r => r.includes('critical')).length,
+                criticalIssues: healthScore.recommendations.filter((r) => r.includes('critical')).length,
                 improvementAreas: healthScore.recommendations,
             },
             performanceTrends: {
@@ -320,9 +322,13 @@ export class ComprehensivePerformanceReporting {
      */
     public exportPerformanceData(
         format: 'json' | 'csv' | 'html' | 'pdf',
-        data: Record<string, unknown> | Array<Record<string, unknown>> |
-              ComprehensivePerformanceReport | CIPerformanceReport | EnvironmentComparisonReport,
-        filename?: string,
+        data:
+            | Record<string, unknown>
+            | Array<Record<string, unknown>>
+            | ComprehensivePerformanceReport
+            | CIPerformanceReport
+            | EnvironmentComparisonReport,
+        filename?: string
     ): string {
         const exportFilename = filename || `performance-export-${Date.now()}`
         const exportPath = path.join(this.reportsDir, `${exportFilename}.${format}`)
@@ -333,10 +339,7 @@ export class ComprehensivePerformanceReporting {
                 break
             case 'csv':
                 if (this.isRecordOrArray(data)) {
-                    fs.writeFileSync(
-                        exportPath,
-                        this.convertToCSV(data as Record<string, unknown> | Array<Record<string, unknown>>),
-                    )
+                    fs.writeFileSync(exportPath, this.convertToCSV(data as Record<string, unknown> | Array<Record<string, unknown>>))
                 } else {
                     throw new Error('CSV export requires record or array data')
                 }
@@ -493,29 +496,41 @@ export class ComprehensivePerformanceReporting {
             </div>
         </div>
 
-        ${report.healthAnalysis.regressions.length > 0 ? `
+        ${
+            report.healthAnalysis.regressions.length > 0
+                ? `
         <div class="section">
             <h2>⚠️ Performance Regressions</h2>
-            ${report.healthAnalysis.regressions.map(reg => `
+            ${report.healthAnalysis.regressions
+                .map(
+                    (reg) => `
                 <div class="regression">
                     <h4>${reg.type.toUpperCase()}</h4>
                     <p>${reg.analysis}</p>
                     <p><strong>Impact:</strong> ${reg.percentageChange.toFixed(1)}% increase</p>
-                    ${reg.recommendations.map(rec => `<p>• ${rec}</p>`).join('')}
+                    ${reg.recommendations.map((rec) => `<p>• ${rec}</p>`).join('')}
                 </div>
-            `).join('')}
+            `
+                )
+                .join('')}
         </div>
-        ` : ''}
+        `
+                : ''
+        }
 
         <div class="section">
             <h2>🎯 Optimization Recommendations</h2>
-            ${report.recommendations.map(rec => `
+            ${report.recommendations
+                .map(
+                    (rec) => `
                 <div class="optimization">
                     <h4>${rec.title}</h4>
                     <p>${rec.description}</p>
                     <p><strong>Priority:</strong> ${rec.priority} | <strong>Impact:</strong> ${rec.estimatedImpact}</p>
                 </div>
-            `).join('')}
+            `
+                )
+                .join('')}
         </div>
 
         <div class="section">
@@ -575,25 +590,38 @@ export class ComprehensivePerformanceReporting {
             <p><strong>${report.performanceSummary.overallScore}/100</strong> (Grade: ${report.performanceSummary.grade})</p>
         </div>
 
-        ${report.deploymentDecision.canDeploy ? 
-        '<div class="status-approved">✅ All performance checks passed. Deployment is approved.</div>' :
-        '<div class="status-blocked">❌ Performance issues detected. Deployment is blocked until resolved.</div>'
-}
+        ${
+            report.deploymentDecision.canDeploy
+                ? '<div class="status-approved">✅ All performance checks passed. Deployment is approved.</div>'
+                : '<div class="status-blocked">❌ Performance issues detected. Deployment is blocked until resolved.</div>'
+        }
 
-        ${report.regressions.length > 0 ? `
+        ${
+            report.regressions.length > 0
+                ? `
             <h3>Performance Regressions</h3>
-            ${report.regressions.map(reg => `
+            ${report.regressions
+                .map(
+                    (reg) => `
                 <div class="regression">
                     <strong>${reg.type}:</strong> ${reg.analysis}
                 </div>
-            `).join('')}
-        ` : ''}
+            `
+                )
+                .join('')}
+        `
+                : ''
+        }
 
         <div class="metric">
             <h3>Quality Gates</h3>
-            ${report.qualityGates.map(gate => `
+            ${report.qualityGates
+                .map(
+                    (gate) => `
                 <p>${gate.status === 'passed' ? '✅' : '❌'} ${gate.name}: ${gate.status}</p>
-            `).join('')}
+            `
+                )
+                .join('')}
         </div>
     </div>
 </body>
@@ -634,13 +662,15 @@ export class ComprehensivePerformanceReporting {
             </tr>
         </thead>
         <tbody>
-            ${(report.environmentComparison.rankings || []).map((ranking: {
-                rank: number
-                environment: string
-                score: number
-                strengths: Array<string>
-                weaknesses: Array<string>
-            }) => `
+            ${(report.environmentComparison.rankings || [])
+                .map(
+                    (ranking: {
+                        rank: number
+                        environment: string
+                        score: number
+                        strengths: Array<string>
+                        weaknesses: Array<string>
+                    }) => `
                 <tr class="rank-${ranking.rank}">
                     <td>${ranking.rank}</td>
                     <td>${ranking.environment}</td>
@@ -648,7 +678,9 @@ export class ComprehensivePerformanceReporting {
                     <td>${ranking.strengths.join(', ')}</td>
                     <td>${ranking.weaknesses.join(', ')}</td>
                 </tr>
-            `).join('')}
+            `
+                )
+                .join('')}
         </tbody>
     </table>
 
@@ -677,7 +709,7 @@ export class ComprehensivePerformanceReporting {
             memoryUsage: report.buildMetrics.peakMemoryUsage || 0,
             regressionsCount: report.healthAnalysis.regressions.length,
             optimizationOpportunities: report.recommendations.length,
-            criticalIssues: report.recommendations.filter(r => r.priority === 'high').length,
+            criticalIssues: report.recommendations.filter((r) => r.priority === 'high').length,
             cacheHitRate: report.cacheAnalysis.performance.hitRate,
             lastUpdated: new Date().toISOString(),
         }
@@ -694,7 +726,7 @@ export class ComprehensivePerformanceReporting {
                 reasoning: 'All performance checks passed successfully',
                 conditions: [],
             }
-        } 
+        }
         const blockingIssues = ciResult.regressions.filter((r: PerformanceRegression) => r.isBlocking)
         return {
             decision: 'block',
@@ -702,13 +734,9 @@ export class ComprehensivePerformanceReporting {
             reasoning: `Performance regressions detected: ${blockingIssues.length} blocking issues`,
             conditions: blockingIssues.map((issue: PerformanceRegression) => `Resolve ${issue.type}: ${issue.analysis}`),
         }
-        
     }
 
-    private generateOptimizationPlan(
-        healthScore: BuildHealthScore,
-        regressions: Array<PerformanceRegression>,
-    ): OptimizationPlan {
+    private generateOptimizationPlan(healthScore: BuildHealthScore, regressions: Array<PerformanceRegression>): OptimizationPlan {
         const plan = {
             immediate: [] as Array<string>,
             shortTerm: [] as Array<string>,
@@ -716,7 +744,7 @@ export class ComprehensivePerformanceReporting {
         }
 
         // Add recommendations based on health score
-        healthScore.recommendations.forEach(rec => {
+        healthScore.recommendations.forEach((rec) => {
             if (rec.includes('immediately') || rec.includes('urgent')) {
                 plan.immediate.push(rec)
             } else if (rec.includes('optimize') || rec.includes('improve')) {
@@ -727,7 +755,7 @@ export class ComprehensivePerformanceReporting {
         })
 
         // Add regression-specific recommendations
-        regressions.forEach(reg => {
+        regressions.forEach((reg) => {
             plan.immediate.push(...reg.recommendations)
         })
 
@@ -769,12 +797,12 @@ export class ComprehensivePerformanceReporting {
         cacheOptimizations: {
             recommendations: Array<string>
         },
-        regressions: Array<PerformanceRegression>,
+        regressions: Array<PerformanceRegression>
     ): Array<Recommendation> {
         const recommendations: Array<Recommendation> = []
 
         // Health score recommendations
-        healthScore.recommendations.forEach(rec => {
+        healthScore.recommendations.forEach((rec) => {
             recommendations.push({
                 title: 'Build Optimization',
                 description: rec,
@@ -785,7 +813,7 @@ export class ComprehensivePerformanceReporting {
         })
 
         // Bundle optimization recommendations
-        bundleRecommendations.slice(0, 5).forEach(rec => {
+        bundleRecommendations.slice(0, 5).forEach((rec) => {
             recommendations.push({
                 title: `Optimize ${rec.assetName}`,
                 description: rec.description,
@@ -807,7 +835,7 @@ export class ComprehensivePerformanceReporting {
         })
 
         // Regression-specific recommendations
-        regressions.forEach(reg => {
+        regressions.forEach((reg) => {
             recommendations.push({
                 title: `Fix ${reg.type} Regression`,
                 description: reg.analysis,
@@ -824,7 +852,7 @@ export class ComprehensivePerformanceReporting {
         metrics: BuildPerformanceMetrics,
         bundleAnalysis: {
             summary: { totalSize: number }
-        },
+        }
     ): Array<Bottleneck> {
         const bottlenecks: Array<Bottleneck> = []
 
@@ -867,7 +895,7 @@ export class ComprehensivePerformanceReporting {
         },
         cachePerformance: {
             hitRate: number
-        },
+        }
     ): Array<OptimizationOpportunity> {
         const opportunities: Array<OptimizationOpportunity> = []
 
@@ -894,10 +922,7 @@ export class ComprehensivePerformanceReporting {
         return opportunities
     }
 
-    private assessPerformanceRisks(
-        metrics: BuildPerformanceMetrics,
-        regressions: Array<PerformanceRegression>,
-    ): RiskAssessment {
+    private assessPerformanceRisks(metrics: BuildPerformanceMetrics, regressions: Array<PerformanceRegression>): RiskAssessment {
         const risks: Array<{
             level: string
             description: string
@@ -923,15 +948,15 @@ export class ComprehensivePerformanceReporting {
         return {
             overallRisk: risks.length > 2 ? 'high' : risks.length > 0 ? 'medium' : 'low',
             risks,
-            recommendations: risks.map(risk => risk.mitigation),
+            recommendations: risks.map((risk) => risk.mitigation),
         }
     }
 
     private predictPerformanceIssues(
-        metrics: BuildPerformanceMetrics,
+        _metrics: BuildPerformanceMetrics,
         trends: {
             direction: 'improving' | 'declining' | 'stable'
-        },
+        }
     ): Array<PredictedIssue> {
         const issues: Array<PredictedIssue> = []
 
@@ -948,7 +973,7 @@ export class ComprehensivePerformanceReporting {
         return issues
     }
 
-    private generateRiskAssessment(metrics: BuildPerformanceMetrics, healthScore: BuildHealthScore): RiskAssessment {
+    private generateRiskAssessment(_metrics: BuildPerformanceMetrics, healthScore: BuildHealthScore): RiskAssessment {
         const risks: Array<{
             level: string
             description: string
@@ -982,7 +1007,7 @@ export class ComprehensivePerformanceReporting {
                 memory: 'improving' | 'declining' | 'stable'
                 overall: 'improving' | 'declining' | 'stable'
             }
-        },
+        }
     ): Array<ExecutiveActionItem> {
         // trends parameter is intentionally unused but kept for API compatibility
         return [
@@ -1017,7 +1042,7 @@ export class ComprehensivePerformanceReporting {
                 memory: 'improving' | 'declining' | 'stable'
                 overall: 'improving' | 'declining' | 'stable'
             }
-        },
+        }
     ): Array<NextStep> {
         return [
             {
@@ -1038,9 +1063,7 @@ export class ComprehensivePerformanceReporting {
         ]
     }
 
-    private generateEnvironmentRecommendations(comparison: {
-        recommendations?: Array<string>
-    }): Array<string> {
+    private generateEnvironmentRecommendations(comparison: { recommendations?: Array<string> }): Array<string> {
         return comparison.recommendations || []
     }
 
@@ -1055,7 +1078,7 @@ export class ComprehensivePerformanceReporting {
         cpus: number
         memory: number
         hostname: string
-        } {
+    } {
         return {
             nodeVersion: process.version,
             platform: os.platform(),
@@ -1074,10 +1097,9 @@ export class ComprehensivePerformanceReporting {
                 // Validate that loaded data is an array before returning
                 if (Array.isArray(data)) {
                     return data
-                } 
+                }
                 console.warn('Invalid historical data format: expected array, got', typeof data)
                 return []
-                
             } catch (error) {
                 console.warn('Failed to load historical data:', error)
                 return []
@@ -1141,8 +1163,7 @@ export class ComprehensivePerformanceReporting {
     private generateEnvironmentDataFromReports(): void {
         try {
             // Look for existing performance reports in the reports directory
-            const reportFiles = fs.readdirSync(this.reportsDir)
-                .filter(file => file.endsWith('.json') && file.includes('report-'))
+            const reportFiles = fs.readdirSync(this.reportsDir).filter((file) => file.endsWith('.json') && file.includes('report-'))
 
             if (reportFiles.length === 0) {
                 return
@@ -1151,7 +1172,8 @@ export class ComprehensivePerformanceReporting {
             // Group reports by environment (if identifiable from filename or content)
             const environmentGroups: Record<string, Array<any>> = {}
 
-            for (const reportFile of reportFiles.slice(-10)) { // Process last 10 reports
+            for (const reportFile of reportFiles.slice(-10)) {
+                // Process last 10 reports
                 try {
                     const reportPath = path.join(this.reportsDir, reportFile)
                     const reportData = JSON.parse(fs.readFileSync(reportPath, 'utf-8'))
@@ -1161,7 +1183,7 @@ export class ComprehensivePerformanceReporting {
                     const { metadata } = reportData
                     const { buildContext } = metadata || {}
                     const { environment: envName } = buildContext || {}
-                    
+
                     if (envName) {
                         environment = envName
                     } else if (reportFile.includes('production')) {
@@ -1207,22 +1229,25 @@ export class ComprehensivePerformanceReporting {
     }
 
     private calculateAverageMetrics(reports: Array<any>): Record<string, any> {
-        const validReports = reports.filter(r => r.metrics)
+        const validReports = reports.filter((r) => r.metrics)
         if (validReports.length === 0) return {}
 
-        const totals = validReports.reduce<Record<string, number>>((acc, report) => {
-            const { metrics } = report
-            acc.totalBuildTime = (acc.totalBuildTime || 0) + (metrics.totalBuildTime || 0)
-            acc.peakMemoryUsage = (acc.peakMemoryUsage || 0) + (metrics.peakMemoryUsage || 0)
-            acc.moduleCount = (acc.moduleCount || 0) + (metrics.moduleCount || 0)
-            acc.assetCount = (acc.assetCount || 0) + (metrics.assetCount || 0)
-            
-            if (metrics.bundleAnalysis) {
-                acc.bundleSize = (acc.bundleSize || 0) + (metrics.bundleAnalysis.totalSize || 0)
-            }
-            
-            return acc
-        }, { totalBuildTime: 0, peakMemoryUsage: 0, moduleCount: 0, assetCount: 0, bundleSize: 0 })
+        const totals = validReports.reduce<Record<string, number>>(
+            (acc, report) => {
+                const { metrics } = report
+                acc.totalBuildTime = (acc.totalBuildTime || 0) + (metrics.totalBuildTime || 0)
+                acc.peakMemoryUsage = (acc.peakMemoryUsage || 0) + (metrics.peakMemoryUsage || 0)
+                acc.moduleCount = (acc.moduleCount || 0) + (metrics.moduleCount || 0)
+                acc.assetCount = (acc.assetCount || 0) + (metrics.assetCount || 0)
+
+                if (metrics.bundleAnalysis) {
+                    acc.bundleSize = (acc.bundleSize || 0) + (metrics.bundleAnalysis.totalSize || 0)
+                }
+
+                return acc
+            },
+            { totalBuildTime: 0, peakMemoryUsage: 0, moduleCount: 0, assetCount: 0, bundleSize: 0 }
+        )
 
         const count = validReports.length
         return {
@@ -1237,17 +1262,20 @@ export class ComprehensivePerformanceReporting {
     }
 
     private calculateAverageHealthScore(reports: Array<any>): Record<string, any> {
-        const validReports = reports.filter(r => r.healthScore)
+        const validReports = reports.filter((r) => r.healthScore)
         if (validReports.length === 0) return {}
 
-        const totals = validReports.reduce<Record<string, number>>((acc, report) => {
-            const { healthScore } = report
-            acc.overallScore = (acc.overallScore || 0) + (healthScore.overallScore || 0)
-            return acc
-        }, { overallScore: 0 })
+        const totals = validReports.reduce<Record<string, number>>(
+            (acc, report) => {
+                const { healthScore } = report
+                acc.overallScore = (acc.overallScore || 0) + (healthScore.overallScore || 0)
+                return acc
+            },
+            { overallScore: 0 }
+        )
 
         const avgScore = Math.round((totals.overallScore || 0) / validReports.length)
-        
+
         // Determine grade based on average score
         let grade = 'F'
         if (avgScore >= 90) grade = 'A'
@@ -1264,7 +1292,7 @@ export class ComprehensivePerformanceReporting {
     private addMinimalEnvironmentData(): void {
         // Add minimal environment data based on current system information
         const envInfo = this.getEnvironmentInfo()
-        
+
         // Create a basic environment profile based on current system
         const basicEnvData = {
             metrics: {
@@ -1317,60 +1345,64 @@ export class ComprehensivePerformanceReporting {
         // Handle array of objects
         if (Array.isArray(data)) {
             if (data.length === 0) return ''
-            
+
             // Get all possible keys from all objects
             const allKeys = new Set<string>()
-            data.forEach(item => {
+            data.forEach((item) => {
                 if (item && typeof item === 'object') {
-                    Object.keys(item).forEach(key => allKeys.add(key))
+                    Object.keys(item).forEach((key) => allKeys.add(key))
                 }
             })
-            
+
             const headers = Array.from(allKeys)
-            const rows = data.map(item => {
-                return headers.map(header => {
-                    const value = item?.[header]
-                    return this.formatCSVValue(value)
-                }).join(',')
+            const rows = data.map((item) => {
+                return headers
+                    .map((header) => {
+                        const value = item?.[header]
+                        return this.formatCSVValue(value)
+                    })
+                    .join(',')
             })
-            
+
             return [headers.join(','), ...rows].join('\n')
         }
-        
+
         // Handle single object
         if (data && typeof data === 'object') {
             const headers = Object.keys(data)
-            const row = headers.map(header => {
-                const value = data[header]
-                return this.formatCSVValue(value)
-            }).join(',')
-            
+            const row = headers
+                .map((header) => {
+                    const value = data[header]
+                    return this.formatCSVValue(value)
+                })
+                .join(',')
+
             return [headers.join(','), row].join('\n')
         }
-        
+
         // Handle primitive values
         return this.formatCSVValue(data)
     }
-    
+
     private formatCSVValue(value: unknown): string {
         if (value === null || value === undefined) {
             return ''
         }
-        
+
         // Handle arrays
         if (Array.isArray(value)) {
             // Convert array to JSON string and escape quotes
             const jsonString = JSON.stringify(value)
             return `"${jsonString.replace(/"/g, '""')}"`
         }
-        
+
         // Handle objects
         if (typeof value === 'object') {
             // Convert object to JSON string and escape quotes
             const jsonString = JSON.stringify(value)
             return `"${jsonString.replace(/"/g, '""')}"`
         }
-        
+
         // Handle strings with commas, quotes, or newlines
         if (typeof value === 'string') {
             if (value.includes(',') || value.includes('"') || value.includes('\n')) {
@@ -1378,7 +1410,7 @@ export class ComprehensivePerformanceReporting {
             }
             return value
         }
-        
+
         // Handle numbers and booleans
         return String(value)
     }
@@ -1388,7 +1420,7 @@ export class ComprehensivePerformanceReporting {
         buildTime: string
         memoryUsage: string
         performanceScore: string
-        } {
+    } {
         return {
             bundleSize: '1MB',
             buildTime: '30s',
@@ -1401,7 +1433,7 @@ export class ComprehensivePerformanceReporting {
         bundleSize: { good: string; acceptable: string; poor: string }
         buildTime: { good: string; acceptable: string; poor: string }
         memoryUsage: { good: string; acceptable: string; poor: string }
-        } {
+    } {
         return {
             bundleSize: { good: '< 500KB', acceptable: '< 1MB', poor: '> 1MB' },
             buildTime: { good: '< 15s', acceptable: '< 30s', poor: '> 45s' },
@@ -1414,7 +1446,7 @@ export class ComprehensivePerformanceReporting {
         typescript: string
         node: string
         monitoring: string
-        } {
+    } {
         return {
             webpack: '5.x',
             typescript: '5.x',
@@ -1434,12 +1466,12 @@ export class ComprehensivePerformanceReporting {
         const units = ['B', 'KB', 'MB', 'GB']
         let size = bytes
         let unitIndex = 0
-        
+
         while (size >= 1024 && unitIndex < units.length - 1) {
             size /= 1024
             unitIndex++
         }
-        
+
         return `${size.toFixed(1)} ${units[unitIndex]}`
     }
 
@@ -1451,9 +1483,7 @@ export class ComprehensivePerformanceReporting {
     }
 
     // Type guard functions
-    private isComprehensivePerformanceReport(
-        data: unknown,
-    ): data is ComprehensivePerformanceReport {
+    private isComprehensivePerformanceReport(data: unknown): data is ComprehensivePerformanceReport {
         return (
             typeof data === 'object' &&
             data !== null &&
@@ -1483,9 +1513,7 @@ export class ComprehensivePerformanceReporting {
         )
     }
 
-    private isEnvironmentComparisonReport(
-        data: unknown,
-    ): data is EnvironmentComparisonReport {
+    private isEnvironmentComparisonReport(data: unknown): data is EnvironmentComparisonReport {
         return (
             typeof data === 'object' &&
             data !== null &&

@@ -2,7 +2,15 @@ import * as fs from 'fs'
 import * as path from 'path'
 import * as webpack from 'webpack'
 
-import type { BuildPerformanceMetrics, BundleAnalysis, ModuleAnalysis, ChunkAnalysis, AssetAnalysis, PerformancePluginOptions, PerformanceHint } from '../types/performance'
+import type {
+    BuildPerformanceMetrics,
+    BundleAnalysis,
+    ModuleAnalysis,
+    ChunkAnalysis,
+    AssetAnalysis,
+    PerformancePluginOptions,
+    PerformanceHint,
+} from '../types/performance'
 
 /**
  * Webpack performance monitoring plugin.
@@ -11,7 +19,7 @@ export class PerformanceMonitoringPlugin {
     private readonly options: PerformancePluginOptions
     private readonly startTime: number
     private readonly metrics: Partial<BuildPerformanceMetrics> = {}
-    private compilationStats: webpack.Stats | null = null
+    // private _compilationStats: webpack.Stats | null = null
 
     constructor(options: Partial<PerformancePluginOptions> = {}) {
         this.options = {
@@ -102,7 +110,7 @@ export class PerformanceMonitoringPlugin {
     private async onEmit(compilation: webpack.Compilation): Promise<void> {
         try {
             this.metrics.emitTime = Date.now() - (this.metrics.compilationTime || this.startTime)
-            
+
             // Collect asset information
             if (compilation.assets) {
                 this.metrics.bundleAnalysis = await this.analyzeBundle(compilation.assets, compilation)
@@ -128,7 +136,7 @@ export class PerformanceMonitoringPlugin {
     private async onAfterEmit(compilation: webpack.Compilation): Promise<void> {
         try {
             this.metrics.chunkCount = compilation.chunks.size
-            
+
             // Analyze chunks
             if (compilation.assets) {
                 this.metrics.bundleAnalysis = await this.analyzeBundle(compilation.assets, compilation)
@@ -152,7 +160,7 @@ export class PerformanceMonitoringPlugin {
 
         // Store compilation stats for detailed analysis
         // Store compilation stats for detailed analysis
-        this.compilationStats = stats
+        // this._compilationStats = stats
 
         // Generate performance hints
         this.metrics.performanceHints = this.generatePerformanceHints()
@@ -188,13 +196,8 @@ export class PerformanceMonitoringPlugin {
      * @param compilation - Webpack compilation instance
      * @returns Bundle analysis data
      */
-    private async analyzeBundle(
-        assets: Record<string, webpack.sources.Source>,
-        compilation: webpack.Compilation,
-    ): Promise<BundleAnalysis> {
-        const assetEntries = Object.entries(assets).filter(([name]) => 
-            !name.startsWith('/') && !name.includes('?:'),
-        )
+    private async analyzeBundle(assets: Record<string, webpack.sources.Source>, compilation: webpack.Compilation): Promise<BundleAnalysis> {
+        const assetEntries = Object.entries(assets).filter(([name]) => !name.startsWith('/') && !name.includes('?:'))
 
         const assetAnalysis: Array<AssetAnalysis> = []
         let totalSize = 0
@@ -286,9 +289,9 @@ export class PerformanceMonitoringPlugin {
             }, 0)
 
             // Type-safe access to modules property
-            const chunkWithModules = chunk as unknown as Record<string, unknown>
-            const modules = chunkWithModules.modules as { size?: number } | undefined
-            
+            // const chunkWithModules = chunk as unknown as Record<string, unknown>
+            // const _modules = chunkWithModules.modules as { size?: number } | undefined
+
             const chunkAnalysis: ChunkAnalysis = {
                 name: chunk.name || 'anonymous',
                 size: chunkSize,
@@ -402,7 +405,7 @@ export class PerformanceMonitoringPlugin {
      */
     private generateHtmlReport(
         report: { metrics: Partial<BuildPerformanceMetrics>; timestamp: string; buildId: string },
-        outputPath: string,
+        outputPath: string
     ): void {
         try {
             const html = this.createHtmlTemplate(report)
@@ -417,9 +420,7 @@ export class PerformanceMonitoringPlugin {
      * @param report - Performance report data
      * @returns HTML template string
      */
-    private createHtmlTemplate(
-        report: { metrics: Partial<BuildPerformanceMetrics>; timestamp: string; buildId: string },
-    ): string {
+    private createHtmlTemplate(report: { metrics: Partial<BuildPerformanceMetrics>; timestamp: string; buildId: string }): string {
         const { metrics } = report
         const { bundleAnalysis } = metrics
 
@@ -455,7 +456,9 @@ export class PerformanceMonitoringPlugin {
         <p><strong>Environment:</strong> ${metrics.environment}</p>
     </div>
 
-    ${bundleAnalysis ? `
+    ${
+        bundleAnalysis
+            ? `
     <div class="metric">
         <h2>Bundle Analysis</h2>
         <p><strong>Total Size:</strong> ${this.formatSize(bundleAnalysis.totalSize)}</p>
@@ -467,30 +470,45 @@ export class PerformanceMonitoringPlugin {
         <table>
             <thead><tr><th>Asset</th><th>Size</th><th>% of Total</th></tr></thead>
             <tbody>
-                ${bundleAnalysis.assets.slice(0, 10).map((asset: AssetAnalysis) => `
+                ${bundleAnalysis.assets
+                    .slice(0, 10)
+                    .map(
+                        (asset: AssetAnalysis) => `
                     <tr>
                         <td>${asset.name}</td>
                         <td>${this.formatSize(asset.size)}</td>
                         <td>${asset.percentage.toFixed(1)}%</td>
                     </tr>
-                `).join('')}
+                `
+                    )
+                    .join('')}
             </tbody>
         </table>
     </div>
-    ` : ''}
+    `
+            : ''
+    }
 
-    ${metrics.performanceHints && metrics.performanceHints.length > 0 ? `
+    ${
+        metrics.performanceHints && metrics.performanceHints.length > 0
+            ? `
     <div class="metric">
         <h2>Performance Hints</h2>
-        ${metrics.performanceHints.map((hint: any) => `
+        ${metrics.performanceHints
+            .map(
+                (hint: any) => `
             <div class="${hint.severity}">
                 <h4>${hint.type}</h4>
                 <p>${hint.message}</p>
                 ${hint.recommendation ? `<p><strong>Recommendation:</strong> ${hint.recommendation}</p>` : ''}
             </div>
-        `).join('')}
+        `
+            )
+            .join('')}
     </div>
-    ` : ''}
+    `
+            : ''
+    }
 </body>
 </html>
         `
@@ -500,18 +518,16 @@ export class PerformanceMonitoringPlugin {
      * Outputs report to console.
      * @param report - Performance report data
      */
-    private outputToConsole(
-        report: { metrics: Partial<BuildPerformanceMetrics>; timestamp: string; buildId: string },
-    ): void {
+    private outputToConsole(report: { metrics: Partial<BuildPerformanceMetrics>; timestamp: string; buildId: string }): void {
         const { metrics } = report
-        
+
         console.log('\n📊 Build Performance Report')
         console.log('==========================')
         console.log(`⏱️  Build Time: ${this.formatTime(metrics.totalBuildTime || 0)}`)
         console.log(`💾 Memory Usage: ${this.formatSize((metrics.peakMemoryUsage || 0) * 1024 * 1024)}`)
         console.log(`📦 Modules: ${metrics.moduleCount}`)
         console.log(`📁 Assets: ${metrics.assetCount}`)
-        
+
         if (metrics.bundleAnalysis) {
             console.log(`📊 Bundle Size: ${this.formatSize(metrics.bundleAnalysis.totalSize)}`)
             console.log(`🗜️  Gzipped Size: ${this.formatSize(metrics.bundleAnalysis.gzippedSize)}`)
@@ -526,17 +542,15 @@ export class PerformanceMonitoringPlugin {
                 }
             })
         }
-        
-        console.log(`\n${  '='.repeat(50)  }\n`)
+
+        console.log(`\n${'='.repeat(50)}\n`)
     }
 
     /**
      * Outputs to real-time monitoring system.
      * @param report - Performance report data
      */
-    private outputToRealTime(
-        report: { metrics: Partial<BuildPerformanceMetrics>; timestamp: string; buildId: string },
-    ): void {
+    private outputToRealTime(report: { metrics: Partial<BuildPerformanceMetrics>; timestamp: string; buildId: string }): void {
         // Implementation would depend on the real-time monitoring system
         // This could be WebSocket, HTTP endpoint, or logging system
         console.log('📡 Real-time performance data:', JSON.stringify(report))
@@ -545,10 +559,10 @@ export class PerformanceMonitoringPlugin {
     // Utility methods
     private recordTiming(phase: string): void {
         if (!this.options.enableTimings) return
-        
+
         const currentTime = Date.now()
         const timingKey = `${phase}Time`
-        
+
         // Store the timing for this phase
         switch (phase) {
             case 'optimization':
@@ -563,8 +577,7 @@ export class PerformanceMonitoringPlugin {
             default:
                 // Store custom timing in a generic way
                 if (timingKey in this.metrics) {
-                    (this.metrics as Record<string, unknown>)[timingKey] =
-                        currentTime - (this.metrics.compilationTime || this.startTime)
+                    ;(this.metrics as Record<string, unknown>)[timingKey] = currentTime - (this.metrics.compilationTime || this.startTime)
                 }
         }
     }
@@ -577,30 +590,30 @@ export class PerformanceMonitoringPlugin {
     private estimateGzippedSize(assetName: string, originalSize: number): number {
         // More accurate estimation based on file type
         const ext = path.extname(assetName).toLowerCase()
-        
+
         // Different compression ratios for different file types
         const compressionRatios: Record<string, number> = {
-            '.js': 0.25,    // JavaScript compresses well
-            '.css': 0.20,   // CSS compresses very well
-            '.json': 0.15,  // JSON compresses extremely well
-            '.html': 0.25,  // HTML compresses well
-            '.txt': 0.30,   // Text files compress moderately
-            '.svg': 0.40,   // SVG compresses less due to XML structure
-            '.woff': 0.98,  // Font files are already compressed
+            '.js': 0.25, // JavaScript compresses well
+            '.css': 0.2, // CSS compresses very well
+            '.json': 0.15, // JSON compresses extremely well
+            '.html': 0.25, // HTML compresses well
+            '.txt': 0.3, // Text files compress moderately
+            '.svg': 0.4, // SVG compresses less due to XML structure
+            '.woff': 0.98, // Font files are already compressed
             '.woff2': 0.99, // WOFF2 is already highly compressed
-            '.png': 0.99,   // PNG is already compressed
-            '.jpg': 0.99,   // JPEG is already compressed
-            '.jpeg': 0.99,  // JPEG is already compressed
-            '.gif': 0.99,   // GIF is already compressed
+            '.png': 0.99, // PNG is already compressed
+            '.jpg': 0.99, // JPEG is already compressed
+            '.jpeg': 0.99, // JPEG is already compressed
+            '.gif': 0.99, // GIF is already compressed
         }
-        
+
         // Use file type specific ratio or default to 0.3
         const ratio = compressionRatios[ext] || 0.3
-        
+
         // Apply minimum size to avoid unrealistic estimates for very small files
         const minSize = Math.min(originalSize, 100)
         const estimatedSize = Math.floor(originalSize * ratio)
-        
+
         return Math.max(estimatedSize, minSize)
     }
 
@@ -631,7 +644,7 @@ export class PerformanceMonitoringPlugin {
     private estimateModuleSize(module: webpack.Module): number {
         // Try to get actual module size from webpack
         const normalModule = module as webpack.NormalModule
-        
+
         // Check if module has size information
         if (normalModule.size && typeof normalModule.size === 'function') {
             try {
@@ -640,13 +653,13 @@ export class PerformanceMonitoringPlugin {
                 // Size calculation failed, continue with other methods
             }
         }
-        
+
         // Try to get size from module source using a safer approach
         try {
             // Access the original source if available
             const moduleWithSource = module as unknown as Record<string, unknown>
             const originalSource = moduleWithSource._originalSource || moduleWithSource.originalSource
-            
+
             if (originalSource) {
                 if (typeof originalSource === 'object' && originalSource !== null && 'size' in originalSource) {
                     const sourceWithSize = originalSource as { size: () => number }
@@ -661,7 +674,7 @@ export class PerformanceMonitoringPlugin {
         } catch (error) {
             // Source access failed, continue with other methods
         }
-        
+
         // Try to get size from module identifier (file path)
         if (normalModule.resource) {
             try {
@@ -671,44 +684,44 @@ export class PerformanceMonitoringPlugin {
                 // File might not exist or be inaccessible
             }
         }
-        
+
         // Fallback to estimation based on module type and identifier
         const identifier = module.identifier() || ''
         const moduleType = this.getModuleType(module)
-        
+
         // Base sizes by module type
         const baseSizes: Record<string, number> = {
-            'javascript': 2000,
-            'typescript': 2500,
-            'stylesheet': 1500,
-            'json': 500,
-            'image': 10000,
-            'font': 50000,
-            'unknown': 1000,
+            javascript: 2000,
+            typescript: 2500,
+            stylesheet: 1500,
+            json: 500,
+            image: 10000,
+            font: 50000,
+            unknown: 1000,
         }
-        
+
         let estimatedSize = baseSizes[moduleType] || 1000
-        
+
         // Adjust based on identifier characteristics
         if (identifier.includes('node_modules')) {
             // Vendor modules are typically larger
             estimatedSize *= 1.5
         }
-        
+
         if (identifier.includes('.min.') || identifier.includes('.bundle.')) {
             // Minified or bundled files
             estimatedSize *= 0.7
         }
-        
+
         return estimatedSize
     }
 
     private getModuleType(module: webpack.Module): string {
         const normalModule = module as webpack.NormalModule
         const resource = normalModule?.resource
-        
+
         if (!resource) return 'unknown'
-        
+
         if (resource.endsWith('.css')) return 'stylesheet'
         if (resource.endsWith('.js')) return 'javascript'
         if (resource.endsWith('.ts')) return 'typescript'
@@ -720,9 +733,9 @@ export class PerformanceMonitoringPlugin {
     private categorizeModule(module: webpack.Module): 'vendor' | 'app' | 'shared' | 'other' {
         const normalModule = module as webpack.NormalModule
         const resource = normalModule?.resource
-        
+
         if (!resource) return 'other'
-        
+
         if (resource.includes('node_modules')) return 'vendor'
         if (resource.includes('src/')) return 'app'
         if (resource.includes('shared/')) return 'shared'
@@ -743,16 +756,16 @@ export class PerformanceMonitoringPlugin {
             }
             return count
         }
-        
+
         // Fallback to accessing modules property directly
         try {
             const chunkWithModules = chunk as unknown as Record<string, unknown>
             const modules = chunkWithModules.modules as Iterable<webpack.Module> | { size?: number } | undefined
-            
+
             if (modules && typeof modules === 'object' && 'size' in modules) {
                 return modules.size || 0
             }
-            
+
             if (modules) {
                 let count = 0
                 for (const _module of Array.from(modules as Iterable<webpack.Module>)) {
@@ -763,14 +776,14 @@ export class PerformanceMonitoringPlugin {
         } catch (error) {
             // Access failed, return default
         }
-        
+
         return 0
     }
 
     private isChunkDuplicated(chunk: webpack.Chunk, compilation: webpack.Compilation): boolean {
         // Check if this chunk's modules are also included in other chunks
         const chunkModules = new Set<string>()
-        
+
         // Collect all modules in this chunk
         if (chunk.modulesIterable) {
             for (const module of Array.from(chunk.modulesIterable)) {
@@ -780,28 +793,28 @@ export class PerformanceMonitoringPlugin {
             // Type-safe access to modules property
             const chunkWithModules = chunk as unknown as Record<string, unknown>
             const modules = chunkWithModules.modules as Iterable<webpack.Module> | undefined
-            
+
             if (modules) {
                 for (const module of Array.from(modules)) {
                     chunkModules.add(module.identifier())
                 }
             }
         }
-        
+
         // If no modules found, can't determine duplication
         if (chunkModules.size === 0) {
             return false
         }
-        
+
         // Check other chunks for overlapping modules
         let duplicateCount = 0
         let totalChecks = 0
-        
+
         for (const otherChunk of Array.from(compilation.chunks)) {
             if (otherChunk === chunk) continue
-            
+
             const otherChunkModules = new Set<string>()
-            
+
             // Collect modules in other chunk
             if (otherChunk.modulesIterable) {
                 for (const module of Array.from(otherChunk.modulesIterable)) {
@@ -811,17 +824,17 @@ export class PerformanceMonitoringPlugin {
                 // Type-safe access to modules property
                 const otherChunkWithModules = otherChunk as unknown as Record<string, unknown>
                 const modules = otherChunkWithModules.modules as Iterable<webpack.Module> | undefined
-                
+
                 if (modules) {
                     for (const module of Array.from(modules)) {
                         otherChunkModules.add(module.identifier())
                     }
                 }
             }
-            
+
             // Skip empty chunks
             if (otherChunkModules.size === 0) continue
-            
+
             // Calculate overlap
             let overlapCount = 0
             for (const moduleId of Array.from(chunkModules)) {
@@ -829,30 +842,30 @@ export class PerformanceMonitoringPlugin {
                     overlapCount++
                 }
             }
-            
+
             // If significant overlap (more than 50%), consider it duplicated
             const overlapPercentage = overlapCount / chunkModules.size
             if (overlapPercentage > 0.5) {
                 duplicateCount++
             }
-            
+
             totalChecks++
         }
-        
+
         // If this chunk overlaps significantly with multiple other chunks, it's likely duplicated
-        return totalChecks > 0 && (duplicateCount / totalChecks) > 0.3
+        return totalChecks > 0 && duplicateCount / totalChecks > 0.3
     }
 
     private formatSize(bytes: number): string {
         const units = ['B', 'KB', 'MB', 'GB']
         let size = bytes
         let unitIndex = 0
-        
+
         while (size >= 1024 && unitIndex < units.length - 1) {
             size /= 1024
             unitIndex++
         }
-        
+
         return `${size.toFixed(1)} ${units[unitIndex]}`
     }
 

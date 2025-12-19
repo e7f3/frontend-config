@@ -21,7 +21,7 @@ const baseRules: Config['rules'] = {
     'declaration-empty-line-before': null,
     'alpha-value-notation': 'number',
     'color-function-notation': 'legacy',
-    
+
     // Modern pseudo-class handling with performance optimization
     'selector-pseudo-class-no-unknown': [
         true,
@@ -29,7 +29,7 @@ const baseRules: Config['rules'] = {
             ignorePseudoClasses: ['global', 'local', 'export', 'import', 'deep', 'local'],
         },
     ],
-    
+
     // Property validation with modern options
     'property-no-unknown': [
         true,
@@ -37,12 +37,12 @@ const baseRules: Config['rules'] = {
             ignoreProperties: ['composes', 'aspect-ratio'],
         },
     ],
-    
+
     // SCSS specific rules - conditionally loaded
     'at-rule-no-unknown': null,
     'no-descending-specificity': null,
     'font-family-no-missing-generic-family-keyword': null,
-    
+
     // Performance optimizations
     'no-duplicate-selectors': true,
     'no-empty-source': true,
@@ -98,7 +98,7 @@ export function buildStylelintConfig(options: BuildStylelintConfigOptions = {}):
     if (enableSemanticGroups) {
         // Use cached plugin loading for better performance
         plugins.push('stylelint-order')
-        
+
         // Dynamic semantic groups with caching
         createDynamicSemanticGroups(semanticGroups)
         rules['order/order'] = selectorOrdering
@@ -107,11 +107,16 @@ export function buildStylelintConfig(options: BuildStylelintConfigOptions = {}):
 
     // Add modern SCSS rules if enabled
     if (enableScss) {
-        Object.assign(rules, enableModernScss ? scssRules : {
-            'scss/at-rule-no-unknown': true,
-            'scss/at-extend-no-missing-placeholder': true,
-            'scss/comment-no-empty': true,
-        })
+        Object.assign(
+            rules,
+            enableModernScss
+                ? scssRules
+                : {
+                      'scss/at-rule-no-unknown': true,
+                      'scss/at-extend-no-missing-placeholder': true,
+                      'scss/comment-no-empty': true,
+                  }
+        )
     }
 
     // Add nesting depth rule with performance consideration
@@ -152,15 +157,15 @@ export function buildStylelintConfig(options: BuildStylelintConfigOptions = {}):
         plugins: [...plugins, ...additionalPlugins],
         rules,
         ignoreFiles: enhancedIgnoreFiles,
-            
+
         // Modern configuration options
         defaultSeverity: 'error',
         fix: false,
-            
+
         // Report needless disposal options for better performance
         reportNeedlessDisables: true,
         reportInvalidScopeDisables: true,
-            
+
         // Performance configuration
         performance: {
             enableCaching: performance.enableCaching ?? true,
@@ -170,7 +175,7 @@ export function buildStylelintConfig(options: BuildStylelintConfigOptions = {}):
             cacheFile: performance.cacheFile,
         },
     }
-    
+
     return config
 }
 
@@ -181,7 +186,7 @@ export function buildStylelintConfig(options: BuildStylelintConfigOptions = {}):
  */
 function createDynamicSemanticGroups(options: BuildStylelintConfigOptions['semanticGroups']): unknown {
     const cacheKey = JSON.stringify(options)
-    
+
     if (semanticGroupsCache.has(cacheKey)) {
         return semanticGroupsCache.get(cacheKey)
     }

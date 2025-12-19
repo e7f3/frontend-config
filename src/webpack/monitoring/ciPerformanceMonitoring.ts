@@ -51,7 +51,7 @@ export class CIPerformanceMonitoring {
         }
 
         this.healthScoring = new BuildHealthScoring(this.config.budgets)
-        
+
         // Ensure reports directory exists
         if (!fs.existsSync(this.REPORTS_DIR)) {
             fs.mkdirSync(this.REPORTS_DIR, { recursive: true })
@@ -69,7 +69,7 @@ export class CIPerformanceMonitoring {
      */
     public async runCIPerformanceMonitoring(
         metrics: BuildPerformanceMetrics,
-        context: CIContext,
+        context: CIContext
     ): Promise<{
         healthScore: BuildHealthScore
         regressions: Array<PerformanceRegression>
@@ -81,27 +81,18 @@ export class CIPerformanceMonitoring {
 
         // Calculate build health score
         const healthScore = this.healthScoring.calculateHealthScore(metrics)
-        
+
         // Detect performance regressions
         const regressions = this.detectRegressions(metrics)
-        
+
         // Determine if deployment is allowed
         const canDeploy = this.shouldAllowDeployment(regressions, healthScore)
-        
+
         // Generate comprehensive report
-        const reportPath = await this.generatePerformanceReport(
-            metrics, 
-            healthScore, 
-            regressions, 
-            context,
-        )
-        
+        const reportPath = await this.generatePerformanceReport(metrics, healthScore, regressions, context)
+
         // Generate recommendations
-        const recommendations = this.generateDeploymentRecommendations(
-            regressions, 
-            healthScore, 
-            canDeploy,
-        )
+        const recommendations = this.generateDeploymentRecommendations(regressions, healthScore, canDeploy)
 
         // Update historical data
         await this.updateHistoricalData(metrics, healthScore, context)
@@ -134,7 +125,7 @@ export class CIPerformanceMonitoring {
             author: string
             baseBranch: string
             headBranch: string
-        },
+        }
     ): Promise<{
         performanceImpact: 'improved' | 'degraded' | 'neutral'
         detailedComparison: {
@@ -170,24 +161,18 @@ export class CIPerformanceMonitoring {
 
         // Calculate performance impact
         const performanceImpact = this.calculatePerformanceImpact(baseMetrics, headMetrics)
-        
+
         // Generate detailed comparison
         const detailedComparison = this.generateDetailedComparison(baseMetrics, headMetrics)
-        
+
         // Identify blocking issues
         const blockingIssues = this.detectBlockingRegressions(headMetrics)
-        
+
         // Generate suggestions
         const suggestions = this.generatePerformanceSuggestions(baseMetrics, headMetrics, performanceImpact)
 
         // Generate PR performance report
-        const reportPath = await this.generatePRPerformanceReport(
-            baseMetrics,
-            headMetrics,
-            performanceImpact,
-            detailedComparison,
-            prInfo,
-        )
+        const reportPath = await this.generatePRPerformanceReport(baseMetrics, headMetrics, performanceImpact, detailedComparison, prInfo)
 
         console.log(`✅ Performance impact analysis complete: ${performanceImpact}`)
         console.log(`📊 Detailed report saved: ${reportPath}`)
@@ -205,9 +190,7 @@ export class CIPerformanceMonitoring {
      * @param metrics - Build performance metrics
      * @returns Budget enforcement results with violations
      */
-    public enforcePerformanceBudgets(
-        metrics: BuildPerformanceMetrics,
-    ): {
+    public enforcePerformanceBudgets(metrics: BuildPerformanceMetrics): {
         passed: boolean
         violations: Array<{
             metric: string
@@ -268,7 +251,7 @@ export class CIPerformanceMonitoring {
         }
 
         return {
-            passed: violations.filter(v => v.severity === 'error').length === 0,
+            passed: violations.filter((v) => v.severity === 'error').length === 0,
             violations,
         }
     }
@@ -313,32 +296,31 @@ export class CIPerformanceMonitoring {
             }
         }
 
-        const hasValidBuildTimeData = previous &&
-            latest.metrics.totalBuildTime &&
-            previous.metrics.totalBuildTime &&
-            previous.metrics.totalBuildTime > 0
-            
-        const buildTimeTrend = hasValidBuildTimeData ?
-            ((latest.metrics.totalBuildTime - previous.metrics.totalBuildTime)
-                / previous.metrics.totalBuildTime) * 100 : 0
+        const hasValidBuildTimeData =
+            previous && latest.metrics.totalBuildTime && previous.metrics.totalBuildTime && previous.metrics.totalBuildTime > 0
 
-        const hasValidBundleSizeData = latest.metrics.bundleAnalysis &&
+        const buildTimeTrend = hasValidBuildTimeData
+            ? ((latest.metrics.totalBuildTime - previous.metrics.totalBuildTime) / previous.metrics.totalBuildTime) * 100
+            : 0
+
+        const hasValidBundleSizeData =
+            latest.metrics.bundleAnalysis &&
             previous?.metrics.bundleAnalysis &&
             previous.metrics.bundleAnalysis.totalSize &&
             previous.metrics.bundleAnalysis.totalSize > 0
-            
-        const bundleSizeTrend = hasValidBundleSizeData ?
-            ((latest.metrics.bundleAnalysis.totalSize - previous.metrics.bundleAnalysis.totalSize)
-                / previous.metrics.bundleAnalysis.totalSize) * 100 : 0
 
-        const hasValidMemoryData = previous &&
-            latest.metrics.peakMemoryUsage &&
-            previous.metrics.peakMemoryUsage &&
-            previous.metrics.peakMemoryUsage > 0
-            
-        const memoryTrend = hasValidMemoryData ?
-            ((latest.metrics.peakMemoryUsage - previous.metrics.peakMemoryUsage)
-                / previous.metrics.peakMemoryUsage) * 100 : 0
+        const bundleSizeTrend = hasValidBundleSizeData
+            ? ((latest.metrics.bundleAnalysis.totalSize - previous.metrics.bundleAnalysis.totalSize) /
+                  previous.metrics.bundleAnalysis.totalSize) *
+              100
+            : 0
+
+        const hasValidMemoryData =
+            previous && latest.metrics.peakMemoryUsage && previous.metrics.peakMemoryUsage && previous.metrics.peakMemoryUsage > 0
+
+        const memoryTrend = hasValidMemoryData
+            ? ((latest.metrics.peakMemoryUsage - previous.metrics.peakMemoryUsage) / previous.metrics.peakMemoryUsage) * 100
+            : 0
 
         const overallTrend = trends.changePercentage
 
@@ -373,12 +355,9 @@ export class CIPerformanceMonitoring {
         return this.healthScoring.detectRegressions(metrics, this.historicalData)
     }
 
-    private shouldAllowDeployment(
-        regressions: Array<PerformanceRegression>,
-        healthScore: BuildHealthScore,
-    ): boolean {
+    private shouldAllowDeployment(regressions: Array<PerformanceRegression>, healthScore: BuildHealthScore): boolean {
         // Check for critical regressions
-        const criticalRegressions = regressions.filter(r => r.severity === 'critical')
+        const criticalRegressions = regressions.filter((r) => r.severity === 'critical')
         if (criticalRegressions.length > 0 && this.config.regressionThresholds.blockOnCritical) {
             return false
         }
@@ -389,7 +368,7 @@ export class CIPerformanceMonitoring {
         }
 
         // Check for blocking regressions
-        const blockingRegressions = regressions.filter(r => r.isBlocking)
+        const blockingRegressions = regressions.filter((r) => r.isBlocking)
         if (blockingRegressions.length > 0 && this.config.regressionThresholds.failOnRegression) {
             return false
         }
@@ -401,7 +380,7 @@ export class CIPerformanceMonitoring {
         metrics: BuildPerformanceMetrics,
         healthScore: BuildHealthScore,
         regressions: Array<PerformanceRegression>,
-        context: CIContext,
+        context: CIContext
     ): string {
         const report = {
             timestamp: new Date().toISOString(),
@@ -415,7 +394,7 @@ export class CIPerformanceMonitoring {
 
         const filename = `ci-performance-${context.buildId || Date.now()}.json`
         const reportPath = path.join(this.REPORTS_DIR, filename)
-        
+
         fs.writeFileSync(reportPath, JSON.stringify(report, null, 2))
         return reportPath
     }
@@ -456,7 +435,7 @@ export class CIPerformanceMonitoring {
             author: string
             baseBranch: string
             headBranch: string
-        },
+        }
     ): string {
         const report = {
             timestamp: new Date().toISOString(),
@@ -473,7 +452,7 @@ export class CIPerformanceMonitoring {
 
         const filename = `pr-performance-${prInfo.number}-${Date.now()}.json`
         const reportPath = path.join(this.REPORTS_DIR, filename)
-        
+
         fs.writeFileSync(reportPath, JSON.stringify(report, null, 2))
         return reportPath
     }
@@ -481,29 +460,29 @@ export class CIPerformanceMonitoring {
     private generateDeploymentRecommendations(
         regressions: Array<PerformanceRegression>,
         healthScore: BuildHealthScore,
-        canDeploy: boolean,
+        canDeploy: boolean
     ): Array<string> {
         const recommendations = []
 
         if (!canDeploy) {
             recommendations.push('❌ Deployment blocked due to performance issues')
-            
+
             if (regressions.length > 0) {
                 recommendations.push('Address performance regressions before deployment:')
-                regressions.forEach(reg => {
+                regressions.forEach((reg) => {
                     recommendations.push(`  - ${reg.analysis}`)
                 })
             }
-            
+
             if (healthScore.overallScore < 60) {
                 recommendations.push(`Build health score (${healthScore.overallScore}) is too low for deployment`)
             }
         } else {
             recommendations.push('✅ Deployment allowed')
-            
+
             if (healthScore.grade !== 'A') {
                 recommendations.push('Consider performance improvements:')
-                healthScore.recommendations.forEach(rec => {
+                healthScore.recommendations.forEach((rec) => {
                     recommendations.push(`  - ${rec}`)
                 })
             }
@@ -514,7 +493,7 @@ export class CIPerformanceMonitoring {
 
     private calculatePerformanceImpact(
         base: BuildPerformanceMetrics,
-        current: BuildPerformanceMetrics,
+        current: BuildPerformanceMetrics
     ): 'improved' | 'degraded' | 'neutral' {
         let improvementScore = 0
         let metricsCount = 0
@@ -527,10 +506,8 @@ export class CIPerformanceMonitoring {
         }
 
         // Bundle size impact
-        if (base.bundleAnalysis && current.bundleAnalysis &&
-            base.bundleAnalysis.totalSize && base.bundleAnalysis.totalSize > 0) {
-            const sizeChange = ((current.bundleAnalysis.totalSize - base.bundleAnalysis.totalSize)
-                / base.bundleAnalysis.totalSize) * 100
+        if (base.bundleAnalysis && current.bundleAnalysis && base.bundleAnalysis.totalSize && base.bundleAnalysis.totalSize > 0) {
+            const sizeChange = ((current.bundleAnalysis.totalSize - base.bundleAnalysis.totalSize) / base.bundleAnalysis.totalSize) * 100
             improvementScore -= sizeChange // Negative change is improvement
             metricsCount++
         }
@@ -553,7 +530,7 @@ export class CIPerformanceMonitoring {
 
     private generateDetailedComparison(
         base: BuildPerformanceMetrics,
-        current: BuildPerformanceMetrics,
+        current: BuildPerformanceMetrics
     ): {
         buildTime: {
             base: number
@@ -585,56 +562,66 @@ export class CIPerformanceMonitoring {
                 base: base.totalBuildTime || 0,
                 current: current.totalBuildTime || 0,
                 change: (current.totalBuildTime || 0) - (base.totalBuildTime || 0),
-                changePercent: base.totalBuildTime && base.totalBuildTime > 0 ?
-                    (((current.totalBuildTime || 0) - base.totalBuildTime) / base.totalBuildTime) * 100 : 0,
+                changePercent:
+                    base.totalBuildTime && base.totalBuildTime > 0
+                        ? (((current.totalBuildTime || 0) - base.totalBuildTime) / base.totalBuildTime) * 100
+                        : 0,
             },
             bundleSize: {
                 base: base.bundleAnalysis?.totalSize || 0,
                 current: current.bundleAnalysis?.totalSize || 0,
                 change: (current.bundleAnalysis?.totalSize || 0) - (base.bundleAnalysis?.totalSize || 0),
-                changePercent: base.bundleAnalysis?.totalSize && base.bundleAnalysis.totalSize > 0 ?
-                    (((current.bundleAnalysis?.totalSize || 0) - base.bundleAnalysis.totalSize)
-                        / base.bundleAnalysis.totalSize) * 100 : 0,
+                changePercent:
+                    base.bundleAnalysis?.totalSize && base.bundleAnalysis.totalSize > 0
+                        ? (((current.bundleAnalysis?.totalSize || 0) - base.bundleAnalysis.totalSize) / base.bundleAnalysis.totalSize) * 100
+                        : 0,
             },
             memoryUsage: {
                 base: base.peakMemoryUsage || 0,
                 current: current.peakMemoryUsage || 0,
                 change: (current.peakMemoryUsage || 0) - (base.peakMemoryUsage || 0),
-                changePercent: base.peakMemoryUsage && base.peakMemoryUsage > 0 ?
-                    (((current.peakMemoryUsage || 0) - base.peakMemoryUsage) / base.peakMemoryUsage) * 100 : 0,
+                changePercent:
+                    base.peakMemoryUsage && base.peakMemoryUsage > 0
+                        ? (((current.peakMemoryUsage || 0) - base.peakMemoryUsage) / base.peakMemoryUsage) * 100
+                        : 0,
             },
             moduleCount: {
                 base: base.moduleCount || 0,
                 current: current.moduleCount || 0,
                 change: (current.moduleCount || 0) - (base.moduleCount || 0),
-                changePercent: base.moduleCount && base.moduleCount > 0 ?
-                    (((current.moduleCount || 0) - base.moduleCount) / base.moduleCount) * 100 : 0,
+                changePercent:
+                    base.moduleCount && base.moduleCount > 0
+                        ? (((current.moduleCount || 0) - base.moduleCount) / base.moduleCount) * 100
+                        : 0,
             },
         }
     }
 
     private detectBlockingRegressions(metrics: BuildPerformanceMetrics): Array<PerformanceRegression> {
         const regressions = this.detectRegressions(metrics)
-        return regressions.filter(r => r.isBlocking || r.severity === 'critical')
+        return regressions.filter((r) => r.isBlocking || r.severity === 'critical')
     }
 
     private generatePerformanceSuggestions(
         base: BuildPerformanceMetrics,
         current: BuildPerformanceMetrics,
-        impact: 'improved' | 'degraded' | 'neutral',
+        impact: 'improved' | 'degraded' | 'neutral'
     ): Array<string> {
         const suggestions = []
 
         if (impact === 'degraded') {
             suggestions.push('⚠️ Performance degradation detected')
-            
+
             if (base.totalBuildTime && current.totalBuildTime > base.totalBuildTime * 1.2) {
                 suggestions.push('Build time increased by more than 20%. Consider optimizing build configuration.')
             }
-            
-            if (current.bundleAnalysis && base.bundleAnalysis &&
+
+            if (
+                current.bundleAnalysis &&
+                base.bundleAnalysis &&
                 base.bundleAnalysis.totalSize &&
-                current.bundleAnalysis.totalSize > base.bundleAnalysis.totalSize * 1.1) {
+                current.bundleAnalysis.totalSize > base.bundleAnalysis.totalSize * 1.1
+            ) {
                 suggestions.push('Bundle size increased. Consider implementing code splitting.')
             }
         } else if (impact === 'improved') {
@@ -704,11 +691,7 @@ export class CIPerformanceMonitoring {
         return recommendations
     }
 
-    private async updateHistoricalData(
-        metrics: BuildPerformanceMetrics,
-        healthScore: BuildHealthScore,
-        context: CIContext,
-    ): Promise<void> {
+    private async updateHistoricalData(metrics: BuildPerformanceMetrics, healthScore: BuildHealthScore, context: CIContext): Promise<void> {
         const historicalEntry: HistoricalPerformanceData = {
             buildId: context.buildId || Date.now().toString(),
             commit: {
@@ -767,27 +750,23 @@ export class CIPerformanceMonitoring {
         }
     }
 
-    private logResults(
-        healthScore: BuildHealthScore,
-        regressions: Array<PerformanceRegression>,
-        canDeploy: boolean,
-    ): void {
+    private logResults(healthScore: BuildHealthScore, regressions: Array<PerformanceRegression>, canDeploy: boolean): void {
         console.log('\n📊 CI/CD Performance Monitoring Results')
         console.log('=====================================')
         console.log(`🏥 Health Score: ${healthScore.overallScore}/100 (Grade: ${healthScore.grade})`)
         console.log(`⚡ Status: ${canDeploy ? '✅ Ready for Deployment' : '❌ Deployment Blocked'}`)
-        
+
         if (regressions.length > 0) {
             console.log(`\n⚠️ Performance Regressions Detected: ${regressions.length}`)
-            regressions.forEach(reg => {
+            regressions.forEach((reg) => {
                 console.log(`   ${reg.severity.toUpperCase()}: ${reg.analysis}`)
             })
         } else {
             console.log('\n✅ No performance regressions detected')
         }
-        
+
         console.log('\n📋 Recommendations:')
-        healthScore.recommendations.forEach(rec => {
+        healthScore.recommendations.forEach((rec) => {
             console.log(`   • ${rec}`)
         })
         console.log('')

@@ -18,12 +18,5 @@ import type { BuildOptions } from '../types/config'
  * @returns Array of webpack RuleSetRule configurations for all supported file types
  */
 export function buildLoaders(options: BuildOptions): Array<RuleSetRule> {
-    return [
-        buildBabelLoader(),
-        buildTsLoader(options),
-        buildCssLoader(options),
-        buildSvgLoader(),
-        buildImageLoader(),
-        buildFontLoader(),
-    ]
+    return [buildBabelLoader(), buildTsLoader(options), buildCssLoader(options), buildSvgLoader(), buildImageLoader(), buildFontLoader()]
 }

@@ -11,10 +11,10 @@ export type RuleSeverity = 'off' | 'warn' | 'error'
  * Configuration presets for different project maturity levels.
  */
 export type ConfigurationPreset =
-    | 'strict'     // Maximum strictness for production code
-    | 'standard'   // Standard balanced configuration
-    | 'relaxed'    // More lenient rules for prototyping
-    | 'minimal'    // Minimal rules for legacy projects
+    | 'strict' // Maximum strictness for production code
+    | 'standard' // Standard balanced configuration
+    | 'relaxed' // More lenient rules for prototyping
+    | 'minimal' // Minimal rules for legacy projects
 
 /**
  * Rule category types for better organization and documentation.

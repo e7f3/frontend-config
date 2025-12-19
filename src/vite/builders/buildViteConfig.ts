@@ -31,11 +31,11 @@ export function buildViteConfig(options: ViteBuildOptions): UserConfig {
         },
         server: options.isDev
             ? {
-                port: options.port ?? 3000,
-                host: true,
-                https: false,
-                open: false,
-            }
+                  port: options.port ?? 3000,
+                  host: true,
+                  https: false,
+                  open: false,
+              }
             : undefined,
         build: {
             outDir: options.paths.output,
@@ -72,27 +72,27 @@ export function buildViteConfig(options: ViteBuildOptions): UserConfig {
                             // Group other node_modules
                             return 'vendor'
                         }
-                        
+
                         // Route-based chunking for SPA
                         if (id.includes('/pages/') || id.includes('/routes/')) {
                             return 'routes'
                         }
-                        
+
                         // Component library chunking
                         if (id.includes('/components/ui/')) {
                             return 'ui-components'
                         }
-                        
+
                         // Feature-based chunking
                         if (id.includes('/features/')) {
                             return 'features'
                         }
-                        
+
                         // Utilities chunking
                         if (id.includes('/utils/') || id.includes('/helpers/')) {
                             return 'utils'
                         }
-                        
+
                         return undefined
                     },
                 },
@@ -119,10 +119,7 @@ export function buildViteConfig(options: ViteBuildOptions): UserConfig {
                 'lucide-react',
             ],
             // Explicitly exclude problematic dependencies
-            exclude: [
-                '@vite/client',
-                '@vite/env',
-            ],
+            exclude: ['@vite/client', '@vite/env'],
         },
     }
 

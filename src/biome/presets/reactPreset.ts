@@ -21,13 +21,13 @@ export const reactPreset: BuildBiomeConfigOptions = {
                 unnamedComponents: ['arrow-function', 'function-expression'],
             },
         ],
-        
+
         'jsx-quotes': ['error', 'prefer-single'],
-        
+
         'react/jsx-filename-extension': ['error', { extensions: ['.tsx', '.jsx', '.js'] }],
-        
+
         'react/jsx-props-no-spreading': 'warn',
-        
+
         'react/jsx-no-useless-fragment': ['error', { allowExpressions: true }],
     },
 }

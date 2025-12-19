@@ -15,38 +15,44 @@ export function basePreset(): JestConfig {
         testMatch: ['**/__tests__/**/*.{js,jsx,ts,tsx}', '**/*.{spec,test}.{js,jsx,ts,tsx}'],
         moduleFileExtensions: ['js', 'jsx', 'ts', 'tsx', 'json', 'node'],
         collectCoverageFrom: ['src/**/*.{js,jsx,ts,tsx}', '!src/**/*.d.ts', '!src/**/*.stories.{js,jsx,ts,tsx}', '!src/**/__tests__/**'],
-        
+
         // SWC-Jest configuration for optimal performance (2000%+ improvement)
         transform: {
-            '^.+\\.(ts|tsx)$': ['@swc/jest', {
-                jsc: {
-                    parser: {
-                        syntax: 'typescript',
-                        tsx: true,
-                        decorators: true,
-                    },
-                    transform: {
-                        react: {
-                            runtime: 'automatic',
+            '^.+\\.(ts|tsx)$': [
+                '@swc/jest',
+                {
+                    jsc: {
+                        parser: {
+                            syntax: 'typescript',
+                            tsx: true,
+                            decorators: true,
+                        },
+                        transform: {
+                            react: {
+                                runtime: 'automatic',
+                            },
                         },
                     },
                 },
-            }],
-            '^.+\\.(js|jsx)$': ['@swc/jest', {
-                jsc: {
-                    parser: {
-                        syntax: 'ecmascript',
-                        jsx: true,
-                    },
-                    transform: {
-                        react: {
-                            runtime: 'automatic',
+            ],
+            '^.+\\.(js|jsx)$': [
+                '@swc/jest',
+                {
+                    jsc: {
+                        parser: {
+                            syntax: 'ecmascript',
+                            jsx: true,
+                        },
+                        transform: {
+                            react: {
+                                runtime: 'automatic',
+                            },
                         },
                     },
                 },
-            }],
+            ],
         },
-        
+
         // Performance optimizations
         cacheDirectory: '<rootDir>/.jest-cache',
         cache: true,

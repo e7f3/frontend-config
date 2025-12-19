@@ -25,48 +25,48 @@ const rulePresets = {
         '@typescript-eslint/prefer-nullish-coalescing': 'error',
         '@typescript-eslint/prefer-optional-chain': 'error',
         '@typescript-eslint/no-unnecessary-type-assertion': 'error',
-        
+
         // Code quality
         'no-console': 'error',
         'no-debugger': 'error',
         'no-alert': 'error',
-        
+
         // React
         'react/jsx-props-no-spreading': 'error',
     },
-    
+
     standard: {
         // TypeScript - Balanced strictness
         '@typescript-eslint/no-explicit-any': 'warn',
         '@typescript-eslint/prefer-nullish-coalescing': 'error',
         '@typescript-eslint/prefer-optional-chain': 'error',
         '@typescript-eslint/no-unnecessary-type-assertion': 'warn',
-        
+
         // Code quality
         'no-console': 'warn',
         'no-debugger': 'error',
         'no-alert': 'error',
-        
+
         // React
         'react/jsx-props-no-spreading': 'warn',
     },
-    
+
     relaxed: {
         // TypeScript - Lenient
         '@typescript-eslint/no-explicit-any': 'off',
         '@typescript-eslint/strict-boolean-expressions': 'off',
         '@typescript-eslint/prefer-nullish-coalescing': 'off',
         '@typescript-eslint/prefer-optional-chain': 'off',
-        
+
         // Code quality
         'no-console': 'off',
         'no-debugger': 'warn',
         'no-alert': 'warn',
-        
+
         // React
         'react/jsx-props-no-spreading': 'off',
     },
-    
+
     minimal: {
         // Minimal rules for legacy projects
         '@typescript-eslint/explicit-function-return-type': 'off',
@@ -89,12 +89,7 @@ const coreRules = {
     'import/order': [
         'error',
         {
-            groups: [
-                ['builtin', 'external'],
-                'internal',
-                ['parent', 'sibling'],
-                'index',
-            ],
+            groups: [['builtin', 'external'], 'internal', ['parent', 'sibling'], 'index'],
             pathGroups: [
                 {
                     pattern: '@react/**',
@@ -114,7 +109,7 @@ const coreRules = {
             },
         },
     ],
-    
+
     // TypeScript core rules
     '@typescript-eslint/adjacent-overload-signatures': 'error',
     '@typescript-eslint/array-type': ['error', { default: 'generic' }],
@@ -190,8 +185,8 @@ const coreRules = {
     'no-var': 'error',
 
     // Code style and formatting
-    'quotes': ['error', 'single', { avoidEscape: true }],
-    'semi': ['error', 'never'],
+    quotes: ['error', 'single', { avoidEscape: true }],
+    semi: ['error', 'never'],
     'comma-dangle': ['error', 'always-multiline'],
     'comma-spacing': ['error', { before: false, after: true }],
     'space-before-function-paren': [
@@ -207,7 +202,7 @@ const coreRules = {
     'object-curly-spacing': ['error', 'always'],
     'array-bracket-spacing': ['error', 'never'],
     'brace-style': ['error', '1tbs', { allowSingleLine: true }],
-    'indent': ['error', 4, { SwitchCase: 1 }],
+    indent: ['error', 4, { SwitchCase: 1 }],
 
     // Modern JavaScript/TypeScript features
     'no-else-return': 'error',
@@ -252,7 +247,7 @@ function mergeRulesWithPreset(baseRules: Record<string, any>, preset?: string): 
     if (!preset || preset === 'standard') {
         return { ...baseRules }
     }
-    
+
     const presetRules = rulePresets[preset as keyof typeof rulePresets] || {}
     return { ...baseRules, ...presetRules }
 }
@@ -271,13 +266,13 @@ export function buildEslintConfig(options: BuildConfigOptions = {}): Array<Linte
         ignorePatterns = [],
         tsconfigPath = './tsconfig.json',
         preset = 'standard',
-        maxLineLength = 120,
+        maxLineLength = 150,
         enablePerformanceRules = true,
     } = options
 
     // Merge core rules with preset and custom rules
     const rules: Record<string, any> = mergeRulesWithPreset(coreRules, preset)
-    
+
     // Apply custom rules override
     Object.assign(rules, customRules)
 
@@ -370,55 +365,55 @@ export function buildEslintConfig(options: BuildConfigOptions = {}): Array<Linte
         // i18next plugin configuration if enabled
         ...(enableI18next
             ? [
-                {
-                    files: ['**/*.{ts,tsx,js,jsx}'],
-                    plugins: {
-                        i18next: i18nextPlugin as any,
-                    },
-                },
-            ]
+                  {
+                      files: ['**/*.{ts,tsx,js,jsx}'],
+                      plugins: {
+                          i18next: i18nextPlugin as any,
+                      },
+                  },
+              ]
             : []),
 
         // Storybook-specific configuration
         ...(enableStorybook
             ? [
-                {
-                    files: ['**/*.stories.{ts,tsx}'],
-                    rules: {
-                        'i18next/no-literal-string': 'off',
-                        'max-len': 'off',
-                        'react/jsx-props-no-spreading': 'off',
-                    } as any,
-                },
-            ]
+                  {
+                      files: ['**/*.stories.{ts,tsx}'],
+                      rules: {
+                          'i18next/no-literal-string': 'off',
+                          'max-len': 'off',
+                          'react/jsx-props-no-spreading': 'off',
+                      } as any,
+                  },
+              ]
             : []),
 
         // Jest-specific configuration
         ...(enableJest
             ? [
-                {
-                    files: ['**/*.test.{ts,tsx}', '**/__tests__/**/*.{ts,tsx}'],
-                    languageOptions: {
-                        globals: {
-                            describe: 'readonly',
-                            it: 'readonly',
-                            expect: 'readonly',
-                            test: 'readonly',
-                            jest: 'readonly',
-                            beforeEach: 'readonly',
-                            afterEach: 'readonly',
-                            beforeAll: 'readonly',
-                            afterAll: 'readonly',
-                            vi: 'readonly',
-                        },
-                    },
-                    rules: {
-                        'i18next/no-literal-string': 'off',
-                        'max-len': 'off',
-                        '@typescript-eslint/no-var-requires': 'off',
-                    } as any,
-                },
-            ]
+                  {
+                      files: ['**/*.test.{ts,tsx}', '**/__tests__/**/*.{ts,tsx}'],
+                      languageOptions: {
+                          globals: {
+                              describe: 'readonly',
+                              it: 'readonly',
+                              expect: 'readonly',
+                              test: 'readonly',
+                              jest: 'readonly',
+                              beforeEach: 'readonly',
+                              afterEach: 'readonly',
+                              beforeAll: 'readonly',
+                              afterAll: 'readonly',
+                              vi: 'readonly',
+                          },
+                      },
+                      rules: {
+                          'i18next/no-literal-string': 'off',
+                          'max-len': 'off',
+                          '@typescript-eslint/no-var-requires': 'off',
+                      } as any,
+                  },
+              ]
             : []),
 
         // JavaScript-specific overrides

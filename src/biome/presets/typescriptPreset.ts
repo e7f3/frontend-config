@@ -15,15 +15,15 @@ export const typescriptPreset: BuildBiomeConfigOptions = {
     tsconfigPath: './tsconfig.json',
     customRules: {
         '@typescript-eslint/no-shadow': 'warn',
-        
+
         '@typescript-eslint/no-unused-vars': 'warn',
-        
+
         '@typescript-eslint/no-use-before-define': ['error', { enums: false }],
-        
+
         '@typescript-eslint/naming-convention': 'warn',
-        
+
         '@typescript-eslint/no-var-requires': 'warn',
-        
+
         '@typescript-eslint/ban-ts-comment': 'warn',
     },
 }

@@ -1,10 +1,10 @@
 {
-  "buildTime": 1622,
-  "rebuildTime": 99,
-  "bundleSize": 483634,
-  "gzippedSize": 169271,
-  "assetCount": 240,
-  "chunkCount": 120,
-  "cacheHitRate": 0,
-  "dependencyAnalysisTime": 8
+    "buildTime": 1622,
+    "rebuildTime": 99,
+    "bundleSize": 483634,
+    "gzippedSize": 169271,
+    "assetCount": 240,
+    "chunkCount": 120,
+    "cacheHitRate": 0,
+    "dependencyAnalysisTime": 8
 }

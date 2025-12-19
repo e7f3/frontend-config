@@ -14,10 +14,4 @@ export { typescriptPreset } from './presets/typescriptPreset'
 
 // Type definitions
 export type { BuildOptions, BuildPaths, EnvVariables } from './types/config'
-export type { 
-    BuildPerformanceMetrics, 
-    BundleAnalysis, 
-    PerformanceHint,
-    BuildHealthScore,
-    PerformanceBudget, 
-} from './types/performance'
+export type { BuildPerformanceMetrics, BundleAnalysis, PerformanceHint, BuildHealthScore, PerformanceBudget } from './types/performance'

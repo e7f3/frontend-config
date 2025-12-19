@@ -19,45 +19,45 @@ export function buildBiomeConfig(options: BuildBiomeConfigOptions = {}): Record<
 
     const baseConfig: Record<string, any> = {
         $schema: 'https://biomejs.dev/schemas/1.7.3/schema.json',
-        
+
         files: {
             ignore: [
-                '**/node_modules/**',      // Node.js dependencies
-                '**/dist/**',              // Distribution builds
-                '**/build/**',             // Build outputs
-                '**/coverage/**',          // Test coverage reports
-                '**/.fttemplates/**',      // FT template files
-                '**/storybook-static/**',  // Storybook static files
-                '**/*.min.js',             // Minified JavaScript
-                ...ignorePatterns,         // User-defined patterns
+                '**/node_modules/**', // Node.js dependencies
+                '**/dist/**', // Distribution builds
+                '**/build/**', // Build outputs
+                '**/coverage/**', // Test coverage reports
+                '**/.fttemplates/**', // FT template files
+                '**/storybook-static/**', // Storybook static files
+                '**/*.min.js', // Minified JavaScript
+                ...ignorePatterns, // User-defined patterns
             ],
         },
-        
+
         formatter: enableFormatting
             ? {
-                enabled: true,
-                indentStyle: 'space',
-                indentSize: 2,
-                lineWidth: 140,
-                lineEnding: 'lf',
-            }
+                  enabled: true,
+                  indentStyle: 'space',
+                  indentSize: 2,
+                  lineWidth: 140,
+                  lineEnding: 'lf',
+              }
             : { enabled: false },
-        
+
         linter: enableLinting
             ? {
-                enabled: true,
-                rules: {
-                    recommended: true,
-                    ...(enableReact ? { react: true } : {}),
-                    ...(enableTypeScript ? { typescript: true } : {}),
-                },
-            }
+                  enabled: true,
+                  rules: {
+                      recommended: true,
+                      ...(enableReact ? { react: true } : {}),
+                      ...(enableTypeScript ? { typescript: true } : {}),
+                  },
+              }
             : { enabled: false },
-        
+
         organizer: {
             enabled: true,
         },
-        
+
         javascript: {
             formatter: {
                 indentStyle: 'space',
@@ -66,7 +66,7 @@ export function buildBiomeConfig(options: BuildBiomeConfigOptions = {}): Record<
                 lineEnding: 'lf',
             },
         },
-        
+
         typescript: {
             formatter: {
                 indentStyle: 'space',

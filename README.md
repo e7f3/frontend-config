@@ -397,6 +397,36 @@ export default buildEslintConfig({
 - Node.js >= 18.0.0
 - npm >= 9.0.0
 
+## GitHub Packages Authentication
+
+This package is published to GitHub Packages. To install or publish, you need to configure authentication:
+
+1. Create a `.env` file in your project root with your GitHub token:
+```
+GITHUB_TOKEN=your_github_personal_access_token_here
+```
+
+2. Generate a personal access token at: https://github.com/settings/tokens
+   - Required scopes: `read:packages`, `write:packages`
+
+3. Use the provided npm authentication script for commands that require authentication:
+```bash
+# Verify authentication
+./scripts/npm-auth.sh whoami --registry=https://npm.pkg.github.com/
+
+# Install from GitHub Packages
+./scripts/npm-auth.sh install @e7f3/frontend-config
+
+# Publish to GitHub Packages
+./scripts/npm-auth.sh publish
+```
+
+Alternatively, you can export the token manually:
+```bash
+export GITHUB_TOKEN=$(grep GITHUB_TOKEN .env | cut -d'=' -f2)
+npm whoami --registry=https://npm.pkg.github.com/
+```
+
 ## Contributing
 
 Contributions are welcome! Please read our Contributing Guide for details.

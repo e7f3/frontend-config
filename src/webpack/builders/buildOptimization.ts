@@ -61,10 +61,12 @@ export function buildOptimization(options: BuildOptions): Configuration['optimiz
                 react: {
                     test: (module: Module) => {
                         const moduleContext = module.context || ''
-                        return moduleContext.includes('node_modules') && 
-                               (moduleContext.includes('react') || 
+                        return (
+                            moduleContext.includes('node_modules') &&
+                            (moduleContext.includes('react') ||
                                 moduleContext.includes('react-dom') ||
                                 moduleContext.includes('react-router'))
+                        )
                     },
                     name: 'react',
                     priority: 40,
@@ -91,11 +93,13 @@ export function buildOptimization(options: BuildOptions): Configuration['optimiz
                 utilities: {
                     test: (module: Module) => {
                         const moduleContext = module.context || ''
-                        return moduleContext.includes('node_modules') && 
-                               (moduleContext.includes('lodash') ||
+                        return (
+                            moduleContext.includes('node_modules') &&
+                            (moduleContext.includes('lodash') ||
                                 moduleContext.includes('underscore') ||
                                 moduleContext.includes('date-fns') ||
                                 moduleContext.includes('moment'))
+                        )
                     },
                     name: 'utilities',
                     priority: 25,
@@ -148,7 +152,7 @@ export function buildOptimization(options: BuildOptions): Configuration['optimiz
  */
 export function buildPersistentCache(options: BuildOptions): Configuration['cache'] {
     const { isDev } = options
-    
+
     if (!isDev) {
         // Production builds don't use persistent cache
         return undefined
@@ -162,10 +166,7 @@ export function buildPersistentCache(options: BuildOptions): Configuration['cach
         cacheDirectory: '.webpack-cache',
         // Build dependencies for cache invalidation
         buildDependencies: {
-            default: [
-                __filename,
-                require.resolve('../buildWebpackConfig'),
-            ],
+            default: [__filename, require.resolve('../buildWebpackConfig')],
             // Include all webpack builders
             webpack: [
                 require.resolve('../builders/buildLoaders'),
@@ -174,14 +175,9 @@ export function buildPersistentCache(options: BuildOptions): Configuration['cach
             ],
         },
         // Managed paths that shouldn't trigger cache invalidation
-        managedPaths: [
-            'node_modules',
-        ],
+        managedPaths: ['node_modules'],
         // Immutable paths that never change
-        immutablePaths: [
-            'node_modules/react',
-            'node_modules/react-dom',
-        ],
+        immutablePaths: ['node_modules/react', 'node_modules/react-dom'],
         // Cache compression
         compression: 'gzip' as const,
     }
@@ -194,7 +190,7 @@ export function buildPersistentCache(options: BuildOptions): Configuration['cach
  */
 export function buildPerformanceMonitoring(options: BuildOptions): Configuration['performance'] {
     const { isDev } = options
-    
+
     if (isDev) {
         return {
             // Show performance hints in development
@@ -205,7 +201,7 @@ export function buildPerformanceMonitoring(options: BuildOptions): Configuration
             maxEntrypointSize: 2097152,
         }
     }
-    
+
     return {
         // Strict performance hints in production
         hints: 'error',
@@ -215,8 +211,7 @@ export function buildPerformanceMonitoring(options: BuildOptions): Configuration
         // Asset filter function
         assetFilter: (assetFilename: string) => {
             // Don't show hints for source maps or manifest files
-            return !assetFilename.endsWith('.map') && 
-                   !assetFilename.includes('manifest')
+            return !assetFilename.endsWith('.map') && !assetFilename.includes('manifest')
         },
     }
 }

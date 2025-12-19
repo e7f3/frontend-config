@@ -1,55 +1,55 @@
 {
-  "compilerOptions": {
-    "target": "ES2022",
-    "module": "Node16",
-    "lib": ["ES2022", "DOM", "DOM.Iterable"],
-    "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true,
-    "outDir": "./dist",
-    "rootDir": "./src",
-    "removeComments": true,
-    "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "noUncheckedIndexedAccess": true,
-    "noPropertyAccessFromIndexSignature": false,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true,
-    "moduleResolution": "NodeNext",
-    "allowSyntheticDefaultImports": true,
-    "isolatedModules": true,
-    "allowJs": true,
-    "checkJs": false,
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./src/*"]
-    },
-    "types": ["node", "vite"],
-    "incremental": true,
-    "composite": true,
-    "tsBuildInfoFile": "./node_modules/.tmp/tsbuildinfo"
-  },
-  "include": ["src/**/*"],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "examples",
-    "**/*.test.ts",
-    "**/*.spec.ts",
-    "coverage",
-    "build",
-    "eslint.config.ts",
-    "stylelint.config.ts"
-  ],
-  "ts-node": {
     "compilerOptions": {
-      "module": "commonjs",
-      "moduleResolution": "node"
+        "target": "ES2022",
+        "module": "Node16",
+        "lib": ["ES2022", "DOM", "DOM.Iterable"],
+        "declaration": true,
+        "declarationMap": true,
+        "sourceMap": true,
+        "outDir": "./dist",
+        "rootDir": "./src",
+        "removeComments": true,
+        "strict": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noImplicitReturns": true,
+        "noFallthroughCasesInSwitch": true,
+        "noUncheckedIndexedAccess": true,
+        "noPropertyAccessFromIndexSignature": false,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "resolveJsonModule": true,
+        "moduleResolution": "NodeNext",
+        "allowSyntheticDefaultImports": true,
+        "isolatedModules": true,
+        "allowJs": true,
+        "checkJs": false,
+        "baseUrl": ".",
+        "paths": {
+            "@/*": ["./src/*"]
+        },
+        "types": ["node", "vite"],
+        "incremental": true,
+        "composite": true,
+        "tsBuildInfoFile": "./node_modules/.tmp/tsbuildinfo"
+    },
+    "include": ["src/**/*"],
+    "exclude": [
+        "node_modules",
+        "dist",
+        "examples",
+        "**/*.test.ts",
+        "**/*.spec.ts",
+        "coverage",
+        "build",
+        "eslint.config.ts",
+        "stylelint.config.ts"
+    ],
+    "ts-node": {
+        "compilerOptions": {
+            "module": "commonjs",
+            "moduleResolution": "node"
+        }
     }
-  }
 }

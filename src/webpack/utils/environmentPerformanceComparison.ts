@@ -1,19 +1,15 @@
-import { BuildHealthScoring } from './buildHealthScoring'
-import type {
-    BuildPerformanceMetrics,
-    BuildHealthScore,
-    HistoricalPerformanceData,
-} from '../types/performance'
+// import { BuildHealthScoring } from './buildHealthScoring'
+import type { BuildPerformanceMetrics, BuildHealthScore, HistoricalPerformanceData } from '../types/performance'
 
 /**
  * Compares build performance across different environments.
  */
 export class EnvironmentPerformanceComparison {
     private readonly environments = new Map<string, EnvironmentData>()
-    private readonly healthScoring: BuildHealthScoring
+    // private readonly _healthScoring: BuildHealthScoring
 
-    constructor(budgets?: Record<string, unknown>) {
-        this.healthScoring = new BuildHealthScoring(budgets)
+    constructor(_budgets?: Record<string, unknown>) {
+        // this._healthScoring = new BuildHealthScoring(budgets)
     }
 
     /**
@@ -21,10 +17,7 @@ export class EnvironmentPerformanceComparison {
      * @param environmentName - Name of the environment
      * @param data - Performance data for the environment
      */
-    public addEnvironmentData(
-        environmentName: string,
-        data: EnvironmentPerformanceData,
-    ): void {
+    public addEnvironmentData(environmentName: string, data: EnvironmentPerformanceData): void {
         this.environments.set(environmentName, {
             name: environmentName,
             data,
@@ -41,7 +34,7 @@ export class EnvironmentPerformanceComparison {
         rankings: Array<EnvironmentRanking>
         insights: PerformanceInsights
         recommendations: Array<string>
-        } {
+    } {
         const envNames = Array.from(this.environments.keys())
         const comparison = this.generateEnvironmentComparison(envNames)
         const rankings = this.rankEnvironments(envNames)
@@ -64,7 +57,7 @@ export class EnvironmentPerformanceComparison {
         trends: EnvironmentTrendAnalysis
         correlations: PerformanceCorrelations
         predictions: PerformancePredictions
-        } {
+    } {
         const trends = this.analyzeEnvironmentTrends()
         const correlations = this.findPerformanceCorrelations()
         const predictions = this.generatePerformancePredictions()
@@ -112,7 +105,7 @@ export class EnvironmentPerformanceComparison {
         anomalies: Array<PerformanceAnomaly>
         alerts: Array<PerformanceAlert>
         severity: 'low' | 'medium' | 'high'
-        } {
+    } {
         const anomalies = this.findPerformanceAnomalies()
         const alerts = this.generatePerformanceAlerts(anomalies)
         const severity = this.calculateOverallSeverity(anomalies)
@@ -136,7 +129,7 @@ export class EnvironmentPerformanceComparison {
             memoryUsage: {},
         }
 
-        envNames.forEach(envName => {
+        envNames.forEach((envName) => {
             const envData = this.environments.get(envName)
             if (!envData) return
 
@@ -184,7 +177,7 @@ export class EnvironmentPerformanceComparison {
 
     private rankEnvironments(envNames: Array<string>): Array<EnvironmentRanking> {
         return envNames
-            .map(envName => {
+            .map((envName) => {
                 const envData = this.environments.get(envName)
                 if (!envData) return null
 
@@ -215,10 +208,7 @@ export class EnvironmentPerformanceComparison {
         return insights
     }
 
-    private generateComparisonRecommendations(
-        comparison: EnvironmentComparison,
-        rankings: Array<EnvironmentRanking>,
-    ): Array<string> {
+    private generateComparisonRecommendations(comparison: EnvironmentComparison, rankings: Array<EnvironmentRanking>): Array<string> {
         const recommendations: Array<string> = []
 
         // Performance gap recommendations
@@ -229,10 +219,10 @@ export class EnvironmentPerformanceComparison {
             const performanceGap = topPerformer.score - worstPerformer.score
             if (performanceGap > 20) {
                 recommendations.push(
-                    `Significant performance gap detected: ${performanceGap} points between "${topPerformer.environment}" (best) and "${worstPerformer.environment}" (worst)`,
+                    `Significant performance gap detected: ${performanceGap} points between "${topPerformer.environment}" (best) and "${worstPerformer.environment}" (worst)`
                 )
                 recommendations.push(
-                    `Analyze configuration differences between "${topPerformer.environment}" and "${worstPerformer.environment}" to identify optimization opportunities`,
+                    `Analyze configuration differences between "${topPerformer.environment}" and "${worstPerformer.environment}" to identify optimization opportunities`
                 )
             }
         }
@@ -244,7 +234,7 @@ export class EnvironmentPerformanceComparison {
         Object.entries(comparison.buildTimes).forEach(([env, time]) => {
             if (time > avgBuildTime * 1.3) {
                 recommendations.push(
-                    `Environment "${env}" has significantly slower build times (${this.formatTime(time)} vs avg ${this.formatTime(avgBuildTime)})`,
+                    `Environment "${env}" has significantly slower build times (${this.formatTime(time)} vs avg ${this.formatTime(avgBuildTime)})`
                 )
             }
         })
@@ -256,7 +246,7 @@ export class EnvironmentPerformanceComparison {
         Object.entries(comparison.memoryUsage).forEach(([env, memory]) => {
             if (memory > avgMemory * 1.4) {
                 recommendations.push(
-                    `Environment "${env}" has high memory usage (${this.formatMemory(memory)} vs avg ${this.formatMemory(avgMemory)})`,
+                    `Environment "${env}" has high memory usage (${this.formatMemory(memory)} vs avg ${this.formatMemory(avgMemory)})`
                 )
             }
         })
@@ -273,11 +263,11 @@ export class EnvironmentPerformanceComparison {
             overallDirection: 'stable',
         }
 
-        this.environments.forEach((envData, envName) => {
+        this.environments.forEach((_envData, envName) => {
             // Simplified trend analysis
             // In a real implementation, this would analyze historical data
             // envData.data is intentionally unused but kept for API compatibility
-            
+
             trends.buildTimeTrends[envName] = {
                 direction: 'stable',
                 changeRate: 0,
@@ -343,17 +333,20 @@ export class EnvironmentPerformanceComparison {
         const recommendations: Array<string> = []
 
         // Build time optimizations
-        if (data.metrics && data.metrics.totalBuildTime > 30000) { // > 30s
+        if (data.metrics && data.metrics.totalBuildTime > 30000) {
+            // > 30s
             recommendations.push('Optimize build configuration to reduce build time')
         }
 
         // Memory optimizations
-        if (data.metrics && data.metrics.peakMemoryUsage > 1024) { // > 1GB
+        if (data.metrics && data.metrics.peakMemoryUsage > 1024) {
+            // > 1GB
             recommendations.push('Consider increasing memory limits or optimizing memory usage')
         }
 
         // Bundle size optimizations
-        if (data.bundleAnalysis && data.bundleAnalysis.totalSize > 1024 * 1024) { // > 1MB
+        if (data.bundleAnalysis && data.bundleAnalysis.totalSize > 1024 * 1024) {
+            // > 1MB
             recommendations.push('Implement code splitting to reduce bundle size')
         }
 
@@ -388,14 +381,12 @@ export class EnvironmentPerformanceComparison {
 
         // Detect outliers in build times
         const buildTimes = Array.from(this.environments.values())
-            .map(env => env.data.metrics?.totalBuildTime || 0)
-            .filter(time => time > 0)
+            .map((env) => env.data.metrics?.totalBuildTime || 0)
+            .filter((time) => time > 0)
 
         if (buildTimes.length > 2) {
             const avgBuildTime = buildTimes.reduce((sum, time) => sum + time, 0) / buildTimes.length
-            const stdDev = Math.sqrt(
-                buildTimes.reduce((sum, time) => sum + Math.pow(time - avgBuildTime, 2), 0) / buildTimes.length,
-            )
+            const stdDev = Math.sqrt(buildTimes.reduce((sum, time) => sum + Math.pow(time - avgBuildTime, 2), 0) / buildTimes.length)
 
             this.environments.forEach((envData, envName) => {
                 const buildTime = envData.data.metrics?.totalBuildTime || 0
@@ -416,7 +407,7 @@ export class EnvironmentPerformanceComparison {
     }
 
     private generatePerformanceAlerts(anomalies: Array<PerformanceAnomaly>): Array<PerformanceAlert> {
-        return anomalies.map(anomaly => ({
+        return anomalies.map((anomaly) => ({
             environment: anomaly.environment,
             type: anomaly.type,
             severity: anomaly.severity,
@@ -427,8 +418,8 @@ export class EnvironmentPerformanceComparison {
     }
 
     private calculateOverallSeverity(anomalies: Array<PerformanceAnomaly>): 'low' | 'medium' | 'high' {
-        const highSeverityCount = anomalies.filter(a => a.severity === 'high').length
-        const mediumSeverityCount = anomalies.filter(a => a.severity === 'medium').length
+        const highSeverityCount = anomalies.filter((a) => a.severity === 'high').length
+        const mediumSeverityCount = anomalies.filter((a) => a.severity === 'medium').length
 
         if (highSeverityCount > 0) return 'high'
         if (mediumSeverityCount > 2) return 'medium'
@@ -519,34 +510,34 @@ export class EnvironmentPerformanceComparison {
     private findFastestEnvironment(buildTimes: Record<string, number>): string {
         const entries = Object.entries(buildTimes)
         if (entries.length === 0) return ''
-        
+
         let fastestEnv = entries[0]![0]
         let fastestTime = entries[0]![1]
-        
+
         for (const [env, time] of entries.slice(1)) {
             if (time < fastestTime) {
                 fastestEnv = env
                 fastestTime = time
             }
         }
-        
+
         return fastestEnv
     }
 
     private findMostEfficientEnvironment(memoryUsage: Record<string, number>): string {
         const entries = Object.entries(memoryUsage)
         if (entries.length === 0) return ''
-        
+
         let mostEfficientEnv = entries[0]![0]
         let mostEfficientMemory = entries[0]![1]
-        
+
         for (const [env, memory] of entries.slice(1)) {
             if (memory < mostEfficientMemory) {
                 mostEfficientEnv = env
                 mostEfficientMemory = memory
             }
         }
-        
+
         return mostEfficientEnv
     }
 
@@ -556,14 +547,14 @@ export class EnvironmentPerformanceComparison {
 
         let bestEnv = entries[0]![0]
         let bestData = entries[0]![1]
-        
+
         for (const [env, data] of entries.slice(1)) {
             if (data && bestData && data.totalSize < bestData.totalSize) {
                 bestEnv = env
                 bestData = data
             }
         }
-        
+
         return bestEnv
     }
 
@@ -573,14 +564,14 @@ export class EnvironmentPerformanceComparison {
 
         let bestEnv = entries[0]![0]
         let bestData = entries[0]![1]
-        
+
         for (const [env, data] of entries.slice(1)) {
             if (data && bestData && data.hitRate > bestData.hitRate) {
                 bestEnv = env
                 bestData = data
             }
         }
-        
+
         return bestEnv
     }
 
@@ -596,7 +587,8 @@ export class EnvironmentPerformanceComparison {
         if (buildTimes.length > 1) {
             const maxBuildTime = Math.max(...buildTimes)
             const minBuildTime = Math.min(...buildTimes)
-            if (maxBuildTime - minBuildTime > 10000) { // > 10s difference
+            if (maxBuildTime - minBuildTime > 10000) {
+                // > 10s difference
                 discrepancies.push({
                     metric: 'build-time',
                     environments: Object.keys(comparison.buildTimes),
@@ -613,7 +605,8 @@ export class EnvironmentPerformanceComparison {
 
         // Find environments that can be optimized
         Object.entries(comparison.buildTimes).forEach(([env, time]) => {
-            if (time > 30000) { // > 30s
+            if (time > 30000) {
+                // > 30s
                 opportunities.push(`Optimize build time for ${env} environment`)
             }
         })
