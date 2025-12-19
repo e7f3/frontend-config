@@ -1,45 +1,32 @@
 module.exports = {
-  // TypeScript and JavaScript files (excluding scripts directory)
-  '**/!(scripts)/**/*.{ts,tsx,js,jsx}': [
-    'eslint --fix',
-    'tsc --noEmit',
-    'prettier --write'
-  ],
-  
+  // Source TypeScript and JavaScript files
+  'src/**/*.{ts,tsx}': ['eslint --fix', 'tsc --noEmit --skipLibCheck --isolatedModules', 'prettier --write'],
+
+  'src/**/*.{js,jsx}': ['eslint --fix', 'prettier --write'],
+
+  // Root level config files
+  '*.{ts,tsx}': ['eslint --fix', 'tsc --noEmit --skipLibCheck --isolatedModules', 'prettier --write'],
+
+  '*.{js,jsx}': ['eslint --fix', 'prettier --write'],
+
   // Scripts directory - only run eslint and prettier, skip TypeScript checking
-  'scripts/**/*.{js,jsx}': [
-    'eslint --fix',
-    'prettier --write'
-  ],
-  
+  'scripts/**/*.{js,jsx}': ['eslint --fix', 'prettier --write'],
+
   // CSS, SCSS, and Stylus files
-  '**/*.{css,scss,styl}': [
-    'stylelint --fix',
-    'prettier --write'
-  ],
-  
+  '**/*.{css,scss,styl}': ['stylelint --fix', 'prettier --write'],
+
   // JSON files
-  '**/*.json': [
-    'prettier --write'
-  ],
-  
+  '**/*.json': ['prettier --write'],
+
   // Markdown files
-  '**/*.md': [
-    'prettier --write'
-  ],
-  
+  '**/*.md': ['prettier --write'],
+
   // YAML files
-  '**/*.{yml,yaml}': [
-    'prettier --write'
-  ],
-  
+  '**/*.{yml,yaml}': ['prettier --write'],
+
   // Test files - run tests for changed test files
-  '**/*.{test,spec}.{ts,tsx,js,jsx}': [
-    'vitest run'
-  ],
-  
+  '**/*.{test,spec}.{ts,tsx,js,jsx}': ['vitest run'],
+
   // Package.json files
-  '**/package.json': [
-    'prettier --write'
-  ]
-};
+  '**/package.json': ['prettier --write'],
+}

@@ -31,5 +31,6 @@
     "incremental": true,
     "composite": true,
     "tsBuildInfoFile": "./node_modules/.tmp/tsbuildinfo"
-  }
+  },
+  "exclude": ["node_modules", "dist", "coverage", "build"]
 }
